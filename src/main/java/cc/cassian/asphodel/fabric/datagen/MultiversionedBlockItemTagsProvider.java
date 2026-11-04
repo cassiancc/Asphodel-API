@@ -8,7 +8,7 @@ package cc.cassian.asphodel.fabric.datagen;
 import cc.cassian.asphodel.util.CommonUtils;
 import cc.cassian.asphodel.references.Identifiable;
 //~ if >=26.2 'cc.cassian.asphodel'->'net.minecraft' {
-import cc.cassian.asphodel.tags.BlockItemTagId;
+import net.minecraft.tags.BlockItemTagId;
 //~}
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;

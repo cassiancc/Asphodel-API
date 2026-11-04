@@ -11,7 +11,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 //~ if >=26.2 'cc.cassian.asphodel.references'->'net.minecraft.references'
-import cc.cassian.asphodel.references.BlockItemId;
+import net.minecraft.references.BlockItemId;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
@@ -23,9 +23,13 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.phys.AABB;
 
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -58,6 +62,11 @@ public interface CommonRegistry {
 	
 	default <R, T extends R> T register(String name, T object, Registry<R> reg) {
 		Registry.register(reg, id(name), object);
+		return object;
+	}
+
+	default <R, T extends R> T register(ResourceKey<R> name, T object, Registry<R> reg) {
+		Registry.register(reg, name.asphodel$identifier(), object);
 		return object;
 	}
 
@@ -121,6 +130,47 @@ public interface CommonRegistry {
 
 	default <B extends Block> ItemLikeEntry<B> registerBlockEntry(String name, Function<BlockBehaviour.Properties, B> blockFactory, BlockBehaviour.Properties properties) {
 		return new ItemLikeEntry<>(id(name), registerBlock(name, blockFactory, properties));
+	}
+
+	default Block registerStair(final String id, final Block base) {
+		return registerStair(blockItemId(id), base);
+	}
+
+	default Block registerStair(final BlockItemId id, final Block base) {
+		return registerBlock(id, p -> new StairBlock(base.defaultBlockState(), p), BlockBehaviour.Properties.ofFullCopy(base)
+				//? if >26.2
+				.isViewBlocking(CommonUtils.NEAR_PLANE_INTERSECTS_OUTLINE)
+		);
+	}
+
+	default Block registerSlab(final String id, final Block base) {
+		return registerSlab(blockItemId(id), base);
+	}
+
+	default Block registerSlab(final BlockItemId id, final Block base) {
+		return registerBlock(id, SlabBlock::new, BlockBehaviour.Properties.ofLegacyCopy(base)
+				//? if >26.2
+				.isViewBlocking(CommonUtils.NEAR_PLANE_INTERSECTS_OUTLINE)
+		);
+	}
+
+	default Block registerWall(final String id, final Block base) {
+		return registerWall(blockItemId(id), base);
+	}
+
+	default Block registerWall(final BlockItemId id, final Block base) {
+		return registerBlock(id, WallBlock::new, BlockBehaviour.Properties.ofLegacyCopy(base).forceSolidOn());
+	}
+
+	default Block registerBlock(final BlockItemId id, final Function<BlockBehaviour.Properties, Block> factory, final BlockBehaviour.Properties properties) {
+		return register(id.block(),  factory.apply(properties
+				//? if >1.21.2
+				.setId(id.block())
+		), BuiltInRegistries.BLOCK);
+	}
+
+	default Block registerBlock(final BlockItemId id, final BlockBehaviour.Properties properties) {
+		return registerBlock(id, Block::new, properties);
 	}
 
 	default <B extends Item> ItemLikeEntry<B> registerItemEntry(String name, Function<Item.Properties, B> itemFactory, Item.Properties properties) {

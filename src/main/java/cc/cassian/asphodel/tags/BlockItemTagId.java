@@ -1,5 +1,5 @@
 //? if <26.2 {
-package cc.cassian.asphodel.tags;
+/*package cc.cassian.asphodel.tags;
 
 import cc.cassian.asphodel.references.Identifiable;
 import net.minecraft.core.registries.Registries;
@@ -17,4 +17,4 @@ public record BlockItemTagId(TagKey<Block> block, TagKey<Item> item) implements 
 		return create(id, id);
 	}
 }
-//?}
+*///?}

@@ -2,7 +2,7 @@ package cc.cassian.asphodel.mixin;
 
 import cc.cassian.asphodel.references.Identifiable;
 //~ if >=26.2 'cc.cassian.asphodel'->'net.minecraft'
-import cc.cassian.asphodel.tags.BlockItemTagId;
+import net.minecraft.tags.BlockItemTagId;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(BlockItemTagId.class)
 public abstract class BlockItemTagIdMixin implements Identifiable {
 
-	//? if <26.2 {
+	//? if >=26.2 {
 	@Shadow
 	public abstract TagKey<Block> block();
 

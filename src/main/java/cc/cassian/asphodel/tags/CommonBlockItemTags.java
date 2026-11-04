@@ -19,7 +19,7 @@ package cc.cassian.asphodel.tags;
 import cc.cassian.asphodel.util.CommonUtils;
 import net.minecraft.resources.Identifier;
 //~ if >=26.2 'cc.cassian.asphodel'->'net.minecraft'
-import cc.cassian.asphodel.tags.BlockItemTagId;
+import net.minecraft.tags.BlockItemTagId;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -89,6 +89,10 @@ public final class CommonBlockItemTags {
 	public static final BlockItemTagId GLASS_PANES_COLORLESS = register("glass_panes/colorless");
 	public static final BlockItemTagId GLAZED_TERRACOTTAS = register("glazed_terracottas");
 	public static final BlockItemTagId CONCRETES = register("concretes");
+	/**
+	 * Solid/full blocks of Ice.
+	 */
+	public static final BlockItemTagId ICE = register("ice");
 
 	// Related to budding mechanics
 	/**

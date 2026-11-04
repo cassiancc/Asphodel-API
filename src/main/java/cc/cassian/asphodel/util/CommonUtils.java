@@ -7,9 +7,23 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.phys.AABB;
 
 @SuppressWarnings("unused")
 public class CommonUtils {
+	//? if >26 {
+	static final BlockBehaviour.StateArgumentPredicate<AABB> NEAR_PLANE_INTERSECTS_OUTLINE = (state, level, blockPos, nearPlaneBox) -> {
+		for (AABB outlineBox : state.getOcclusionShape().toAabbs()) {
+			if (outlineBox.move(blockPos).intersects(nearPlaneBox)) {
+				return true;
+			}
+		}
+
+		return false;
+	};
+	//?}
+
 	/**
 	 * Creates an ID from a namespace and path.
 	 */

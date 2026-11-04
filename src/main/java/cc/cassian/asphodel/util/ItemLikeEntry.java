@@ -3,7 +3,7 @@ package cc.cassian.asphodel.util;
 import cc.cassian.asphodel.references.Identifiable;
 import net.minecraft.core.registries.Registries;
 //~ if >=26.2 'cc.cassian.asphodel.references'->'net.minecraft.references'
-import cc.cassian.asphodel.references.BlockItemId;
+import net.minecraft.references.BlockItemId;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * A pair of a block or item and its ID. Primary benefit over a direct value is for 26.2+ data generation, which requires the ID to be stored separately from the block.
- * @deprecated: Blocks and items now have a helper method for their resource key.
+ * @deprecated Blocks and items now have a helper method for their resource key.
  */
 @SuppressWarnings("DeprecatedIsStillUsed")
 @Deprecated
