@@ -1,0 +1,32 @@
+modLoader="javafml"
+loaderVersion = "[1,)"
+issueTrackerURL="https://github.com/cassiancc/Asphodel-API/issues"
+displayURL="https://github.com/cassiancc/Asphodel-API"
+iconFile="assets/asphodel_api/icon.png"
+bannerFile="assets/asphodel_api/icon.png"
+logoFile="assets/asphodel_api/icon.png"
+authors="cassiancc"
+license="${mod_license}"
+
+[[mods]]
+modId="asphodel_api"
+version="${version}"
+displayName="${mod_name}"
+description="${mod_description}"
+
+[[dependencies.asphodel_api]]
+modId="neoforge"
+versionRange="[2,)"
+type="required"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.asphodel_api]]
+modId="minecraft"
+type="required"
+versionRange="${minecraft}"
+ordering="NONE"
+side="BOTH"
+
+[[mixins]]
+config = "asphodel_api.mixins.json"
