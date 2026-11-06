@@ -311,7 +311,7 @@ publishMods {
         accessToken = env.MODRINTH_API_KEY.orNull()
         minecraftVersions.add(property("deps.minecraft") as String)
         minecraftVersions.addAll(additionalVersions)
-        optional("cloth-config")
+        environment = CLIENT_AND_SERVER
     }
 
     curseforge {

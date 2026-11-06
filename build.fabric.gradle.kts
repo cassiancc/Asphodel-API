@@ -374,6 +374,7 @@ publishMods {
         minecraftVersions.add(property("deps.minecraft") as String)
         minecraftVersions.addAll(additionalVersions)
         requires("fabric-api")
+        environment = CLIENT_AND_SERVER
     }
 
     curseforge {
