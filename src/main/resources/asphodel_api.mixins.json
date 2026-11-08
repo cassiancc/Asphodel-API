@@ -6,6 +6,7 @@
     "BlockItemIdMixin",
     "BlockItemTagIdMixin",
     "BlockMixin",
+    "EntityTypeMixin",
     "FluidMixin",
     "HolderDirectMixin",
     "HolderMixin",

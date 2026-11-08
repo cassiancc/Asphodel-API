@@ -6,3 +6,4 @@ transitive-inject-interface net/minecraft/core/Holder$Reference cc/cassian/aspho
 transitive-inject-interface net/minecraft/core/Holder$Direct cc/cassian/asphodel/references/Identifiable
 transitive-inject-interface net/minecraft/resources/ResourceKey cc/cassian/asphodel/references/Identifiable
 transitive-inject-interface net/minecraft/sounds/SoundEvent cc/cassian/asphodel/references/Identifiable
+transitive-inject-interface net/minecraft/world/entity/EntityType cc/cassian/asphodel/references/Identifiable

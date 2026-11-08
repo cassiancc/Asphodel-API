@@ -14,11 +14,9 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-//? if >=26.2 {
-import net.minecraft.core.registries.BuiltInRegistries;
-//?} else if >26 {
-/*import net.minecraft.data.tags.TagAppender;
- *///?}
+//? if >26 {
+import net.minecraft.data.tags.TagAppender;
+ //?}
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagBuilder;
@@ -26,6 +24,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -59,7 +58,7 @@ public abstract class MultiversionedBlockTagsProvider extends FabricTagsProvider
 
 		public MultiversionedBlockTagBuilder add(Block block) {
 			//? if >=26.2 {
-			rawBuilder = rawBuilder.addElement(BuiltInRegistries.BLOCK.getKey(block));
+			rawBuilder = rawBuilder.addElement(block.asphodel$identifier());
 			 //?} else {
 			/*valueLookupBuilder = valueLookupBuilder.add(block);
 			*///?}
@@ -91,6 +90,15 @@ public abstract class MultiversionedBlockTagsProvider extends FabricTagsProvider
 		}
 
 		public MultiversionedBlockTagBuilder add(Stream<? extends Identifiable> block) {
+			block.forEach(identifiable -> {
+				if (identifiable instanceof TagKey<?>)
+					rawBuilder = rawBuilder.addOptionalTag(identifiable.asphodel$identifier());
+				else rawBuilder = rawBuilder.addElement(identifiable.asphodel$identifier());
+			});
+			return this;
+		}
+
+		public MultiversionedBlockTagBuilder add(List<? extends Identifiable> block) {
 			block.forEach(identifiable -> {
 				if (identifiable instanceof TagKey<?>)
 					rawBuilder = rawBuilder.addOptionalTag(identifiable.asphodel$identifier());
@@ -133,7 +141,7 @@ public abstract class MultiversionedBlockTagsProvider extends FabricTagsProvider
 		public MultiversionedBlockTagBuilder add(Block... blocks) {
 			//? if >=26.2 {
 			for (Block block : blocks) {
-				rawBuilder = rawBuilder.addElement(BuiltInRegistries.BLOCK.getKey(block));
+				rawBuilder = rawBuilder.addElement(block.asphodel$identifier());
 			}
 			//?} else {
 			/*valueLookupBuilder = valueLookupBuilder.add(blocks);

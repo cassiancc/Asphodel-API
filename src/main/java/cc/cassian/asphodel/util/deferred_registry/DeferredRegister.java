@@ -4,14 +4,17 @@ import cc.cassian.asphodel.util.RegistryUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class DeferredRegister<T> {
@@ -83,6 +86,14 @@ public class DeferredRegister<T> {
 			return new DeferredItem<>(id, register.register(name, (Supplier<Item>) o));
 		}
 
+		public <I extends Item> DeferredItem<I> register(String name, Function<Item.Properties, I> o, Item.Properties properties) {
+			Identifier id = Identifier.fromNamespaceAndPath(register.namespace(), name);
+			return register(name, () -> o.apply(properties
+					//? if >1.21.2
+					.setId(ResourceKey.create(Registries.ITEM, id))
+					));
+		}
+
 		public void register() {
 			register.register();
 		}
@@ -103,6 +114,14 @@ public class DeferredRegister<T> {
 		public <I extends Block> DeferredBlock<I> register(String name, Supplier<I> o) {
 			Identifier id = Identifier.fromNamespaceAndPath(register.namespace(), name);
 			return new DeferredBlock<>(id, register.register(name, (Supplier<Block>) o));
+		}
+
+		public <I extends Block> DeferredBlock<I> register(String name, Function<BlockBehaviour.Properties, I> o, BlockBehaviour.Properties properties) {
+			Identifier id = Identifier.fromNamespaceAndPath(register.namespace(), name);
+			return register(name, () -> o.apply(properties
+					//? if >1.21.2
+					.setId(ResourceKey.create(Registries.BLOCK, id))
+					));
 		}
 
 		public void register() {

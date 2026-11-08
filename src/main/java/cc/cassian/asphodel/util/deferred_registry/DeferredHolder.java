@@ -9,14 +9,14 @@ import java.util.function.Supplier;
 
 public class DeferredHolder<I, S extends I> extends Holder.Reference<I> implements Supplier<S>, Identifiable {
 	private final Identifier id;
-	private Supplier<S> item;
+	private Supplier<S> value;
 	private final ResourceKey<I> key;
 
-	public DeferredHolder(ResourceKey<I> id, Supplier<S> item) {
+	public DeferredHolder(ResourceKey<I> id, Supplier<S> value) {
 		super(Type.STAND_ALONE, null, id, null);
 		this.id = id.asphodel$identifier();
 		this.key = id;
-		this.item = item;
+		this.value = value;
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class DeferredHolder<I, S extends I> extends Holder.Reference<I> implemen
 
 	@Override
 	public S get() {
-		return item.get();
+		return value.get();
 	}
 
 	public ResourceKey<I> getKey() {
@@ -38,7 +38,7 @@ public class DeferredHolder<I, S extends I> extends Holder.Reference<I> implemen
 	}
 
 	public void setValue(S register) {
-		item = ()-> register;
+		value = ()-> register;
 	}
 
 	@Override

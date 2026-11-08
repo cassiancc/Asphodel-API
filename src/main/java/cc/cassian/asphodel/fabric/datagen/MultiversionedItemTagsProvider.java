@@ -15,21 +15,26 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-//? if >=26.2 {
-import net.minecraft.core.registries.BuiltInRegistries;
-//?} else if >26 {
-/*import net.minecraft.data.tags.TagAppender;
-*///?}
+//? if >26.1 {
+import net.minecraft.data.tags.BlockItemTagAppender;
+//?}
+//? if >26 {
+import net.minecraft.data.tags.TagAppender;
+//?}
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagBuilder;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public abstract class MultiversionedItemTagsProvider extends FabricTagsProvider.ItemTagsProvider {
+
 	public MultiversionedItemTagsProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registryLookupFuture, BlockTagsProvider blockTagsProvider) {
 		super(output, registryLookupFuture, blockTagsProvider);
 	}
@@ -39,20 +44,22 @@ public abstract class MultiversionedItemTagsProvider extends FabricTagsProvider.
 	}
 
 	public class MultiversionedItemTagBuilder {
-		//? if >1.21.2 && <26.2 {
+		//? if >=26.2 {
+		private final BlockItemTagAppender<Item> valueLookupBuilder;
+		//?} else if >1.21.2 {
 		/*private TagAppender<Item, Item> valueLookupBuilder;
-		*///?}
-		//? if <1.21.2 {
+		*///?} else {
 		/*private FabricTagsProvider<Item>.FabricTagBuilder valueLookupBuilder;
 		 *///?}
 
 		private TagBuilder rawBuilder;
 
 		public MultiversionedItemTagBuilder(TagKey<Item> tag) {
-			//? if >1.21.2 && <26.2 {
+			//? if >=26.2 {
+			this.valueLookupBuilder = builder(tag);
+			//?} else if >1.21.2 {
 			/*this.valueLookupBuilder = valueLookupBuilder(tag);
-			*///?}
-			//? if <1.21.2 {
+			*///?} else {
 			/*this.valueLookupBuilder = getOrCreateTagBuilder(tag);
 			 *///?}
 
@@ -61,7 +68,7 @@ public abstract class MultiversionedItemTagsProvider extends FabricTagsProvider.
 
 		public MultiversionedItemTagBuilder add(Item item) {
 			//? if >=26.2 {
-			rawBuilder = rawBuilder.addElement(BuiltInRegistries.ITEM.getKey(item));
+			rawBuilder = rawBuilder.addElement(item.asphodel$identifier());
 			//?} else {
 			/*valueLookupBuilder = valueLookupBuilder.add(item);
 			*///?}
@@ -85,9 +92,37 @@ public abstract class MultiversionedItemTagsProvider extends FabricTagsProvider.
 
 		public MultiversionedItemTagBuilder add(Identifiable... item) {
 			for (Identifiable identifiable : item) {
-				rawBuilder = rawBuilder.addElement(identifiable.asphodel$identifier());
+				if (identifiable instanceof TagKey<?>)
+					rawBuilder = rawBuilder.addOptionalTag(identifiable.asphodel$identifier());
+				else rawBuilder = rawBuilder.addElement(identifiable.asphodel$identifier());
 			}
 			return this;
+		}
+
+		public MultiversionedItemTagBuilder add(Stream<? extends Identifiable> item) {
+			item.forEach(identifiable -> {
+				if (identifiable instanceof TagKey<?>)
+					rawBuilder = rawBuilder.addOptionalTag(identifiable.asphodel$identifier());
+				else rawBuilder = rawBuilder.addElement(identifiable.asphodel$identifier());
+			});
+			return this;
+		}
+
+		public MultiversionedItemTagBuilder add(List<? extends Identifiable> item) {
+			item.forEach(identifiable -> {
+				if (identifiable instanceof TagKey<?>)
+					rawBuilder = rawBuilder.addOptionalTag(identifiable.asphodel$identifier());
+				else rawBuilder = rawBuilder.addElement(identifiable.asphodel$identifier());
+			});
+			return this;
+		}
+
+		public MultiversionedItemTagBuilder addAll(Stream<? extends Identifiable> item) {
+			return add(item);
+		}
+
+		public MultiversionedItemTagBuilder addAll(List<? extends Identifiable> item) {
+			return add(item);
 		}
 
 		public MultiversionedItemTagBuilder add(BlockItemId item) {
@@ -103,14 +138,14 @@ public abstract class MultiversionedItemTagsProvider extends FabricTagsProvider.
 		}
 
 		public MultiversionedItemTagBuilder addOptionalTag(TagKey<Item> itemTagKey) {
-			rawBuilder = rawBuilder.addOptionalTag(itemTagKey.location());
+			rawBuilder = rawBuilder.addOptionalTag(itemTagKey.asphodel$identifier());
 			return this;
 		}
 
 		public MultiversionedItemTagBuilder add(Item... items) {
 			//? if >=26.2 {
 			for (Item item : items) {
-				rawBuilder = rawBuilder.addElement(BuiltInRegistries.ITEM.getKey(item));
+				rawBuilder = rawBuilder.addElement(item.asphodel$identifier());
 			}
 			//?} else {
 			/*valueLookupBuilder = valueLookupBuilder.add(items);
@@ -126,6 +161,12 @@ public abstract class MultiversionedItemTagsProvider extends FabricTagsProvider.
 		public MultiversionedItemTagBuilder add(Identifier item) {
 			rawBuilder = rawBuilder.addElement(item);
 			return this;
+		}
+	}
+
+	public void copy(BlockItemTagId... blockItemTagIds) {
+		for (BlockItemTagId blockItemTagId : blockItemTagIds) {
+			super.copy(blockItemTagId.block(), blockItemTagId.item());
 		}
 	}
 

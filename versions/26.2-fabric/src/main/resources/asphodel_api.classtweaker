@@ -8,3 +8,4 @@ transitive-inject-interface net/minecraft/resources/ResourceKey cc/cassian/aspho
 transitive-inject-interface net/minecraft/sounds/SoundEvent cc/cassian/asphodel/references/Identifiable
 transitive-inject-interface net/minecraft/tags/BlockItemTagId cc/cassian/asphodel/references/Identifiable
 transitive-inject-interface net/minecraft/references/BlockItemId cc/cassian/asphodel/references/Identifiable
+transitive-inject-interface net/minecraft/world/entity/EntityType cc/cassian/asphodel/references/Identifiable

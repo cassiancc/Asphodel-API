@@ -5,9 +5,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 //?}
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-//? if >1.21 {
 import net.minecraft.core.component.DataComponentType;
-//?}
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 //~ if >=26.2 'cc.cassian.asphodel.references'->'net.minecraft.references'
@@ -29,11 +27,11 @@ import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.phys.AABB;
 
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+@SuppressWarnings("unused")
 public interface CommonRegistry {
 
 	String namespace();
@@ -70,11 +68,9 @@ public interface CommonRegistry {
 		return object;
 	}
 
-	//? if >1.21 {
 	default <T> DataComponentType<T> registerComponentType(String name, UnaryOperator<DataComponentType.Builder<T>> builderOperator) {
 		return register(name, builderOperator.apply(DataComponentType.builder()).build(), BuiltInRegistries.DATA_COMPONENT_TYPE);
 	}
-	//?}
 
 	default <B extends Item> B registerItem(String name, B item) {
 		return register(name, item, BuiltInRegistries.ITEM);
@@ -87,6 +83,7 @@ public interface CommonRegistry {
 	/**
 	 * Registers a block and its block item.
 	 */
+	@Deprecated
 	default ItemLikeEntry<Block> registerBlockItemEntry(String name, Function<BlockBehaviour.Properties, Block> blockFactory, BlockBehaviour.Properties properties) {
 		Identifier id = id(name);
 		return new ItemLikeEntry<>(id, registerBlockItem(name, blockFactory, properties));
@@ -117,6 +114,7 @@ public interface CommonRegistry {
 		return Registry.register(BuiltInRegistries.BLOCK, id, block);
 	}
 
+	@Deprecated
 	default <B extends Block> ItemLikeEntry<B> registerBlockEntry(String name, B block) {
 		return new ItemLikeEntry<>(id(name), register(name, block, BuiltInRegistries.BLOCK));
 	}
@@ -128,6 +126,7 @@ public interface CommonRegistry {
 				), BuiltInRegistries.BLOCK);
 	}
 
+	@Deprecated
 	default <B extends Block> ItemLikeEntry<B> registerBlockEntry(String name, Function<BlockBehaviour.Properties, B> blockFactory, BlockBehaviour.Properties properties) {
 		return new ItemLikeEntry<>(id(name), registerBlock(name, blockFactory, properties));
 	}
@@ -173,6 +172,7 @@ public interface CommonRegistry {
 		return registerBlock(id, Block::new, properties);
 	}
 
+	@Deprecated
 	default <B extends Item> ItemLikeEntry<B> registerItemEntry(String name, Function<Item.Properties, B> itemFactory, Item.Properties properties) {
 		return new ItemLikeEntry<>(id(name), registerItem(name, itemFactory, properties));
 	}
@@ -185,6 +185,7 @@ public interface CommonRegistry {
 		return register(name, item, BuiltInRegistries.ITEM);
 	}
 
+	@Deprecated
 	default <B extends Item> ItemLikeEntry<B> registerItemEntry(String name, B item) {
 		return new ItemLikeEntry<>(id(name), register(name, item, BuiltInRegistries.ITEM));
 	}

@@ -19,5 +19,8 @@
   ],
   "net/minecraft/sounds/SoundEvent":[
     "cc/cassian/asphodel/references/Identifiable"
+  ],
+  "net/minecraft/world/entity/EntityType": [
+    "cc/cassian/asphodel/references/Identifiable"
   ]
 }
