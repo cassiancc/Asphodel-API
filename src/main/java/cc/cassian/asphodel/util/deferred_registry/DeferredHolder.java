@@ -5,12 +5,15 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class DeferredHolder<I, S extends I> extends Holder.Reference<I> implements Supplier<S>, Identifiable {
 	private final Identifier id;
 	private Supplier<S> value;
 	private final ResourceKey<I> key;
+
 
 	public DeferredHolder(ResourceKey<I> id, Supplier<S> value) {
 		super(Type.STAND_ALONE, null, id, null);

@@ -20,6 +20,7 @@ import java.util.function.Supplier;
 public class DeferredRegister<T> {
 	private final Registry<T> registry;
 	private final String modid;
+	private final List<Runnable> callbacks = new ArrayList<>();
 
 	public DeferredRegister(Registry<T> registry, String modId) {
 		this.registry = registry;
@@ -67,6 +68,18 @@ public class DeferredRegister<T> {
 			T register = Registry.register(registry, entry.getId(), entry.get());
 			entry.setValue(register);
 		}
+		for (Runnable callback : getCallbacks()) {
+			callback.run();
+		}
+	}
+
+	public List<Runnable> getCallbacks() {
+		return callbacks;
+	}
+
+	/// Add a callback that will be run after all values are registered.
+	public boolean addCallback(Runnable callback) {
+		return callbacks.add(callback);
 	}
 
 	public static class Items {
