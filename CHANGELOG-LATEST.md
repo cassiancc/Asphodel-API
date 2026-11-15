@@ -1,2 +1,5 @@
 ### Added
-- Deferred holders can now accept callbacks that will be run when their value is registered.
+- Support for 26.4-snapshot-8.
+
+### Fixes
+- 1.20.1 Fabric build now works with Java 17.
