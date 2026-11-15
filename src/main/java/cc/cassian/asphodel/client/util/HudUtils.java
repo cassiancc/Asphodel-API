@@ -1,5 +1,6 @@
 package cc.cassian.asphodel.client.util;
 
+import cc.cassian.asphodel.util.CommonUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;

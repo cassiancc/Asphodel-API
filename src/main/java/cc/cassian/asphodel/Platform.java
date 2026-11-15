@@ -3,6 +3,10 @@ package cc.cassian.asphodel;
 //? fabric {
 import cc.cassian.asphodel.fabric.FabricPlatformImpl;
 //?}
+//? forge {
+/*import cc.cassian.asphodel.forge.ForgePlatformImpl;
+*///?}
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 //? neoforge {
@@ -15,6 +19,8 @@ public interface Platform {
     Platform INSTANCE = new FabricPlatformImpl();
     //?} else if neoforge {
     /*Platform INSTANCE = new NeoforgePlatformImpl();
+    *///?} else if forge {
+    /*Platform INSTANCE = new ForgePlatformImpl();
     *///?}
 
 	default boolean isModLoaded(String modid) {

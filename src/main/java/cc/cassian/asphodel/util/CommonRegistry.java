@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 //?}
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+//? if >1.21
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -68,9 +69,11 @@ public interface CommonRegistry {
 		return object;
 	}
 
+	//? if >1.21 {
 	default <T> DataComponentType<T> registerComponentType(String name, UnaryOperator<DataComponentType.Builder<T>> builderOperator) {
 		return register(name, builderOperator.apply(DataComponentType.builder()).build(), BuiltInRegistries.DATA_COMPONENT_TYPE);
 	}
+	//?}
 
 	default <B extends Item> B registerItem(String name, B item) {
 		return register(name, item, BuiltInRegistries.ITEM);
@@ -136,6 +139,7 @@ public interface CommonRegistry {
 	}
 
 	default Block registerStair(final BlockItemId id, final Block base) {
+		//~ if >1.21 '.copy'->'.ofFullCopy'
 		return registerBlock(id, p -> new StairBlock(base.defaultBlockState(), p), BlockBehaviour.Properties.ofFullCopy(base)
 				//? if >26.2
 				.isViewBlocking(CommonUtils.NEAR_PLANE_INTERSECTS_OUTLINE)
@@ -147,6 +151,7 @@ public interface CommonRegistry {
 	}
 
 	default Block registerSlab(final BlockItemId id, final Block base) {
+		//~ if >1.21 '.copy'->'.ofLegacyCopy'
 		return registerBlock(id, SlabBlock::new, BlockBehaviour.Properties.ofLegacyCopy(base)
 				//? if >26.2
 				.isViewBlocking(CommonUtils.NEAR_PLANE_INTERSECTS_OUTLINE)
@@ -158,6 +163,7 @@ public interface CommonRegistry {
 	}
 
 	default Block registerWall(final BlockItemId id, final Block base) {
+		//~ if >1.21 '.copy'->'.ofLegacyCopy'
 		return registerBlock(id, WallBlock::new, BlockBehaviour.Properties.ofLegacyCopy(base).forceSolidOn());
 	}
 

@@ -1,0 +1,28 @@
+modLoader = "javafml"
+loaderVersion = "[43,)"
+license = "MIT"
+
+[[mods]]
+modId = "asphodel_api"
+version = "${version}"
+displayName = "${mod_name}"
+authors = "cassiancc"
+description = "${mod_description}"
+logoFile = "assets/asphodel_api/icon.png"
+issueTrackerURL = "https://github.com/cassiancc/Asphodel-API/issues"
+displayURL="https://modrinth.com/mod/asphodel-api"
+modURL="https://modrinth.com/mod/asphodel-api"
+
+[[dependencies.asphodel_api]]
+modId = "forge"
+mandatory = true
+versionRange = "[43,50)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.asphodel_api]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20,1.20.2)"
+ordering = "NONE"
+side = "CLIENT"

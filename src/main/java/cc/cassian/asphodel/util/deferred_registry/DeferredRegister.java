@@ -1,7 +1,9 @@
+//? if >1.21 {
 package cc.cassian.asphodel.util.deferred_registry;
 
 import cc.cassian.asphodel.util.RegistryUtils;
 import net.minecraft.core.Registry;
+//? if >1.21
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -160,3 +162,4 @@ public class DeferredRegister<T> {
 		}
 	}
 }
+//?}

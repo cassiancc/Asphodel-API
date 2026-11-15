@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "cc.cassian.asphodel.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BlockItemIdMixin",
     "BlockItemTagIdMixin",

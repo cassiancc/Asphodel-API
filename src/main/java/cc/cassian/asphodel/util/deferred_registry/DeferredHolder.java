@@ -1,3 +1,4 @@
+//? if >1.21 {
 package cc.cassian.asphodel.util.deferred_registry;
 
 import cc.cassian.asphodel.references.Identifiable;
@@ -49,3 +50,4 @@ public class DeferredHolder<I, S extends I> extends Holder.Reference<I> implemen
 		return id;
 	}
 }
+//?}
