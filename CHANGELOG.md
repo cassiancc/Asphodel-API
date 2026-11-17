@@ -1,3 +1,11 @@
+## [1.2.0]
+
+### Added
+- `EventDispatcher` class, which will contain common and multiversion friendly interpretations of Fabric and NeoForge events.
+    - Creative mode tab placement event.
+    - Recipe sync event.
+- Transitive access wideners on `SimpleParticleType` and `HeartType`.
+
 ## [1.1.4]
 
 ### Added
