@@ -3,6 +3,8 @@ package cc.cassian.asphodel.client.events;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.resources.Identifier;
 
+import java.util.function.Consumer;
+
 public class ClientEventDispatcher {
 	private final String namespace;
 
@@ -15,4 +17,8 @@ public class ClientEventDispatcher {
 		ItemPropertyEvents.registerRangeSelectItemProperty(namespace, id, properties);
 	}
 	//?}
+
+	public void modifyItemTooltip(Consumer<ItemTooltipEvents.TooltipAccess> tooltip) {
+		ItemTooltipEvents.modifyItemTooltip(namespace, tooltip);
+	}
 }

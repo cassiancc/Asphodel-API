@@ -1,9 +1,14 @@
 package cc.cassian.asphodel.client.events;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
-import net.minecraft.resources.Identifier;
 
+//? if >26
+import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.Identifier;
+//? if >=26.4 {
+/*import net.minecraft.client.core.registries.BuiltInClientRegistries;
+*///?}
 //? fabric && >26 {
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperties;
 //?}
@@ -16,7 +21,9 @@ import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 public class ItemPropertyEvents {
 	//? if >26 {
 	protected static void registerRangeSelectItemProperty(String modId, Identifier id, MapCodec<RangeSelectItemModelProperty> properties) {
-		//? fabric{
+		//? if >=26.4 {
+		/*Registry.register(BuiltInClientRegistries.RANGE_SELECT_ITEM_MODEL_PROPERTY_TYPE, id, properties);
+		*///?} fabric{
 		RangeSelectItemModelProperties.ID_MAPPER.put(id, properties);
 		//?} else if neoforge {
 		/*ModList.get().getModContainerById(modId).orElseThrow().getEventBus().addListener(RegisterRangeSelectItemModelPropertyEvent.class, event->{

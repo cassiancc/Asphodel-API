@@ -22,6 +22,7 @@ tasks.named<ProcessResources>("processResources") {
         this["mod_description"] = prop("mod.description")
         this["mod_license"] = prop("mod.license")
         this["target_loader"] = prop("deps.fabric_loader")
+        this["fabric_api"] = prop("mod.min_fabric_api")
     }
 
     filesMatching(listOf("fabric.mod.json", "META-INF/neoforge.mods.toml", "META-INF/mods.toml")) {

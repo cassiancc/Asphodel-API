@@ -46,4 +46,6 @@ public interface Platform {
 	default boolean isDevEnvironment() {
 		return isDeveloperEnvironment();
 	}
+
+	boolean isClientSide();
 }

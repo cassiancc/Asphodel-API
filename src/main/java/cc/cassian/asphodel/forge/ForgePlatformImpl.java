@@ -46,6 +46,11 @@ public class ForgePlatformImpl implements Platform {
         return !FMLEnvironment.production;
     }
 
+    @Override
+    public boolean isClientSide() {
+        return FMLEnvironment.dist.isClient();
+    }
+
 
 }
 *///?}

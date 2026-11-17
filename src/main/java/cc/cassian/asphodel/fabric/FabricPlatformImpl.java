@@ -3,6 +3,7 @@ package cc.cassian.asphodel.fabric;
 //? fabric {
 
 import cc.cassian.asphodel.Platform;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.Identifier;
 
@@ -41,5 +42,10 @@ public class FabricPlatformImpl implements Platform {
 	public boolean isDeveloperEnvironment() {
 		return FabricLoader.getInstance().isDevelopmentEnvironment();
 	}
+
+    @Override
+    public boolean isClientSide() {
+        return FabricLoader.getInstance().getEnvironmentType().equals(EnvType.CLIENT);
+    }
 }
 //?}
