@@ -13,8 +13,8 @@ Yes, this is another moddername library. I work on over 50 mods at this point sp
 - Universal interface for retrieving an object's `Identifier`.
 - A lightweight deferred registration implementation for easily porting mods away from Forge.
 - Multiversion-friendly block and item tag data generators.
-- Common code-friendly implementation of the common tags.
-
+- Common code-friendly implementation of the Fabric/NeoForge conventional tags.
+- Event dispatcher system for safely dispatching multiloader/multiversioned events.
 
 ## Credits
 Common tag classes are based on the implementation in [Fabric API](https://github.com/FabricMC/fabric), used under Apache 2.0 License.
