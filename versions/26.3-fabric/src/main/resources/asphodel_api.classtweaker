@@ -9,3 +9,5 @@ transitive-inject-interface net/minecraft/sounds/SoundEvent cc/cassian/asphodel/
 transitive-inject-interface net/minecraft/tags/BlockItemTagId cc/cassian/asphodel/references/Identifiable
 transitive-inject-interface net/minecraft/references/BlockItemId cc/cassian/asphodel/references/Identifiable
 transitive-inject-interface net/minecraft/world/entity/EntityType cc/cassian/asphodel/references/Identifiable
+transitive-accessible method net/minecraft/core/particles/SimpleParticleType <init> (Z)V
+transitive-accessible class net/minecraft/client/gui/Hud$HeartType

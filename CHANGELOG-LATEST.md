@@ -1,5 +1,4 @@
 ### Added
-- Support for 26.4-snapshot-8.
-
-### Fixes
-- 1.20.1 Fabric build now works with Java 17.
+- `EventDispatcher` class, which will contain common and multiversion friendly interpretations of Fabric and NeoForge events.
+  - Creative mode tab placement event.
+- Transitive access wideners on `SimpleParticleType` and `HeartType`.
