@@ -15,10 +15,15 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+//? forge {
+/*import cc.cassian.asphodel.forge.ForgeUtil;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+*///?}
 //? neoforge {
-/*import net.neoforged.fml.ModList;
-import net.neoforged.fml.ModLoadingContext;
+/*import cc.cassian.asphodel.neoforge.ForgeUtil;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.bus.api.EventPriority;
 *///?}
 
 import java.util.*;
@@ -32,8 +37,8 @@ public class CreativeTabEvent {
 				applyFabric(tabPlacements, fabricCreativeModeTabOutput);
 			}
 		});
-		//?} else if neoforge {
-		/*ModList.get().getModContainerById(modId).orElseThrow().getEventBus().addListener(BuildCreativeModeTabContentsEvent.class, event->{
+		//?} else if neoforge || forge {
+		/*ForgeUtil.getEventBus(modId).addListener(EventPriority.NORMAL, false, BuildCreativeModeTabContentsEvent.class, event->{
 			if (event.getTabKey().equals(tab)) {
 				applyForge(tabPlacements, event);
 			}
@@ -104,6 +109,21 @@ public class CreativeTabEvent {
 			for (ItemStack item : items) {
 				event.accept(item);
 			}
+		}
+	}
+
+	*///?} else if forge {
+	/*private static void applyForge(Consumer<CreativeTabPlacements> tabPlacements, BuildCreativeModeTabContentsEvent event) {
+		CreativeTabPlacements t = new CreativeTabPlacements();
+		tabPlacements.accept(t);
+		for (ItemStack addition : t.ADDITIONS) {
+			event.accept(addition);
+		}
+		for (List<ItemStack> addition : t.AFTER.values()) {
+			event.acceptAll(addition);
+		}
+		for (List<ItemStack> addition : t.BEFORE.values()) {
+			event.acceptAll(addition);
 		}
 	}
 

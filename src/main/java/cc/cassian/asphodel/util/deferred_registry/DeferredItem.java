@@ -1,4 +1,3 @@
-//? if >1.21 {
 package cc.cassian.asphodel.util.deferred_registry;
 
 import net.minecraft.core.registries.Registries;
@@ -20,4 +19,3 @@ public class DeferredItem<I extends Item> extends DeferredHolder<Item, I> implem
 		return get();
 	}
 }
-//?}

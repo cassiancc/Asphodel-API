@@ -1,6 +1,6 @@
-//? if >1.21 {
 package cc.cassian.asphodel.util.deferred_registry;
 
+import cc.cassian.asphodel.util.CommonUtils;
 import cc.cassian.asphodel.util.RegistryUtils;
 import net.minecraft.core.Registry;
 //? if >1.21
@@ -37,9 +37,11 @@ public class DeferredRegister<T> {
 		return new DeferredRegister<>(registry, modId);
 	}
 
+	//? if >1.21 {
 	public static DataComponents createDataComponents(ResourceKey<Registry<DataComponentType<?>>> registryResourceKey, String modId) {
 		return new DataComponents(registryResourceKey, modId);
 	}
+	//?}
 
 	public String namespace() {
 		return modid;
@@ -54,7 +56,7 @@ public class DeferredRegister<T> {
 	}
 
 	public <A extends T> DeferredHolder<T, A> register(String name, Supplier<T> o) {
-		DeferredHolder<T, A> holder = new DeferredHolder<>(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(namespace(), name)), (Supplier<A>) o);
+		DeferredHolder<T, A> holder = new DeferredHolder<>(ResourceKey.create(registry.key(), CommonUtils.id(namespace(), name)), (Supplier<A>) o);
 		entries.add((DeferredHolder<T, T>) holder);
 		return holder;
 	}
@@ -97,12 +99,12 @@ public class DeferredRegister<T> {
 		}
 
 		public <I extends Item> DeferredItem<I> register(String name, Supplier<I> o) {
-			Identifier id = Identifier.fromNamespaceAndPath(register.namespace(), name);
+			Identifier id = CommonUtils.id(register.namespace(), name);
 			return new DeferredItem<>(id, register.register(name, (Supplier<Item>) o));
 		}
 
 		public <I extends Item> DeferredItem<I> register(String name, Function<Item.Properties, I> o, Item.Properties properties) {
-			Identifier id = Identifier.fromNamespaceAndPath(register.namespace(), name);
+			Identifier id = CommonUtils.id(register.namespace(), name);
 			return register(name, () -> o.apply(properties
 					//? if >1.21.2
 					.setId(ResourceKey.create(Registries.ITEM, id))
@@ -127,12 +129,12 @@ public class DeferredRegister<T> {
 		}
 
 		public <I extends Block> DeferredBlock<I> register(String name, Supplier<I> o) {
-			Identifier id = Identifier.fromNamespaceAndPath(register.namespace(), name);
+			Identifier id = CommonUtils.id(register.namespace(), name);
 			return new DeferredBlock<>(id, register.register(name, (Supplier<Block>) o));
 		}
 
 		public <I extends Block> DeferredBlock<I> register(String name, Function<BlockBehaviour.Properties, I> o, BlockBehaviour.Properties properties) {
-			Identifier id = Identifier.fromNamespaceAndPath(register.namespace(), name);
+			Identifier id = CommonUtils.id(register.namespace(), name);
 			return register(name, () -> o.apply(properties
 					//? if >1.21.2
 					.setId(ResourceKey.create(Registries.BLOCK, id))
@@ -144,6 +146,7 @@ public class DeferredRegister<T> {
 		}
 	}
 
+	//? if >1.21 {
 	public static class DataComponents {
 		private final DeferredRegister<DataComponentType<?>> register;
 
@@ -161,5 +164,5 @@ public class DeferredRegister<T> {
 			register.register();
 		}
 	}
+	//?}
 }
-//?}

@@ -6,3 +6,4 @@
 
 ### Changed
 - Mod now declares minimum compatible Fabric API and NeoForge versions.
+- Deferred register APIs are now available on 1.20.1 builds.
