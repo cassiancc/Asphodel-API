@@ -8,6 +8,7 @@ import net.minecraft.world.clock.WorldClocks;
 
 @SuppressWarnings("unused")
 public class ClientUtil {
+	@Deprecated
 	public static
 	//? if >1.21.8 {
 	KeyMapping.Category
