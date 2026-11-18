@@ -20,7 +20,7 @@ import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 
 public class ItemPropertyEvents {
 	//? if >26 {
-	protected static void registerRangeSelectItemProperty(String modId, Identifier id, MapCodec<RangeSelectItemModelProperty> properties) {
+	protected static void registerRangeSelectItemProperty(String modId, Identifier id, MapCodec<? extends RangeSelectItemModelProperty> properties) {
 		//? if >=26.4 {
 		/*Registry.register(BuiltInClientRegistries.RANGE_SELECT_ITEM_MODEL_PROPERTY_TYPE, id, properties);
 		*///?} fabric{

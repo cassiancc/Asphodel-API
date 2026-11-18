@@ -15,7 +15,7 @@ public class ClientEventDispatcher {
 	}
 
 	//? if >26 {
-	public void registerRangeSelectItemProperty(Identifier id, MapCodec<net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty> properties) {
+	public void registerRangeSelectItemProperty(Identifier id, MapCodec<? extends net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty> properties) {
 		ItemPropertyEvents.registerRangeSelectItemProperty(namespace, id, properties);
 	}
 	//?}
