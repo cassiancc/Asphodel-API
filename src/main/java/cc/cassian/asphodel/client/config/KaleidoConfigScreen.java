@@ -2,7 +2,6 @@ package cc.cassian.asphodel.client.config;
 
 import cc.cassian.asphodel.client.util.HudUtils;
 import folk.sisby.kaleido.lib.quiltconfig.api.Config;
-import folk.sisby.kaleido.lib.quiltconfig.api.metadata.Comments;
 import folk.sisby.kaleido.lib.quiltconfig.api.values.TrackedValue;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -17,10 +16,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
-import org.apache.commons.lang3.text.WordUtils;
 import org.jspecify.annotations.NonNull;
 
 import java.util.*;
+
+import static cc.cassian.asphodel.client.config.ConfigUtil.*;
 
 public class KaleidoConfigScreen extends Screen {
 	public static final int PADDING = 4;
@@ -120,62 +120,15 @@ public class KaleidoConfigScreen extends Screen {
 		finalizeLayout(linearLayout, layout, this);
 	}
 
-	private static MutableComponent formatText(String key) {
-		return Component.literal(formatString(key));
-	}
-
-	private static String formatString(String key) {
-		return WordUtils.capitalize(camelToSnake(key).replace("_", " "));
-	}
-
-	// Function to convert camel case string to snake case string.
-	public static String camelToSnake(String str) {
-		StringBuilder result = new StringBuilder();
-
-		// Lowercase and append first character to result string
-		result.append(Character.toLowerCase(str.charAt(0)));
-
-		// Traverse the string from first index to last index
-		for (int i = 1; i < str.length(); i++) {
-
-			char ch = str.charAt(i);
-
-			// Check if the character is upper case
-			// then append '_' and such character
-			// (in lower case) to result string
-			if (Character.isUpperCase(ch)) {
-				if (Character.isLowerCase(str.charAt(i-1)))
-					result.append('_');
-				result.append(Character.toLowerCase(ch));
-			}
-
-			// If the character is lower case, add the character to the result string
-			else {
-				result.append(ch);
-			}
-		}
-
-		// return the result
-		return result.toString();
-	}
-
 	private <T> void addValue(TrackedValue<T> value, Map<String, GridData> generalHelper) {
-		var commentList = new ArrayList<Component>();
-		value.metadata().forEach((metadataType, o) -> {
-			if (o instanceof Comments comments) {
-				comments.forEach(c->commentList.add(Component.literal(c)));
-			}
-		});
-		if (commentList.isEmpty()) {
-			commentList.add(0, getName(value));
-		}
+		var commentList = fieldTooltip(value);
 		if (value.value() instanceof Boolean b) {
 			GridLayout.RowHelper helper = getHelper(value, generalHelper);
-			addBooleanOption(helper, getName(value), commentList,  b, (cycleButton, newValue )-> value.setValue((T) newValue));
+			addBooleanOption(helper, fieldName(value), commentList,  b, (cycleButton, newValue )-> value.setValue((T) newValue));
 		}
 		else if (value.value() instanceof Enum<?> e) {
 			GridLayout.RowHelper helper = getHelper(value, generalHelper);
-			addEnumOption(helper, getName(value), commentList, e, e.getClass().getEnumConstants(),  (cycleButton, newValue )-> value.setValue((T) newValue));
+			addEnumOption(helper, fieldName(value), commentList, e, e.getClass().getEnumConstants(),  (cycleButton, newValue )-> value.setValue((T) newValue));
 		}
 		else if (value.value() instanceof String string) {
 			GridLayout.RowHelper helper = getHelper(value, generalHelper);
@@ -184,10 +137,6 @@ public class KaleidoConfigScreen extends Screen {
 		else {
 //			System.out.println(value.value().getClass());
 		}
-	}
-
-	private <T> Component getName(TrackedValue<T> value) {
-		return formatText(value.key().getLastComponent());
 	}
 
 	private <T> GridLayout.RowHelper getHelper(TrackedValue<T> value, Map<String, GridData> generalHelper) {
@@ -228,7 +177,7 @@ public class KaleidoConfigScreen extends Screen {
 
 	private void addStringOption(GridLayout.RowHelper linearLayout, TrackedValue<String> value, List<Component> tooltip, String currentValue) {
 		StringEditBox widget = new StringEditBox(font, buttonWidth, 20, Component.empty());
-		widget.setHint(getName(value));
+		widget.setHint(fieldName(value));
 		widget.setValue(currentValue);
 		widget.setResponder((newValue )-> {
 			widget.parsed = true;

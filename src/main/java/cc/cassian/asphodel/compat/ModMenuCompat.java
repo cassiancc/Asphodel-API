@@ -1,12 +1,11 @@
 package cc.cassian.asphodel.compat;
 
 import cc.cassian.asphodel.Platform;
-import cc.cassian.asphodel.client.config.KaleidoConfigScreen;
+import cc.cassian.asphodel.client.config.ConfigUtil;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import folk.sisby.kaleido.lib.quiltconfig.impl.util.ConfigsImpl;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.network.chat.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +21,7 @@ public class ModMenuCompat implements ModMenuApi {
 		ConfigsImpl.getAll().iterator().forEachRemaining(config -> {
 			FabricLoader.getInstance().getModContainer(config.id()).ifPresent(container -> {
 				String id = container.getMetadata().getId();
-				map.put(id, (s) -> new KaleidoConfigScreen(container.getMetadata().getId(), Component.literal(container.getMetadata().getName()), config, s));
+				map.put(id, screen -> ConfigUtil.create(id, container.getMetadata().getName(), config).create(screen));
 			});
 		});
 
