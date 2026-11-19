@@ -140,6 +140,10 @@ public class CreativeTabEvent {
 			ADDITIONS = new ArrayList<>();
 		}
 
+		public void addBefore(ItemLike anchor, ItemStack stack) {
+			addBefore(anchor.asItem().getDefaultInstance(), stack);
+		}
+
 		public void addBefore(ItemStack anchor, ItemStack stack) {
 			BEFORE.put(anchor, Collections.singletonList(stack));
 		}
@@ -148,8 +152,8 @@ public class CreativeTabEvent {
 			BEFORE.put(anchor, List.of(stack));
 		}
 
-		public void addBefore(ItemStack anchor, List<ItemStack> stack) {
-			BEFORE.put(anchor, stack);
+		public void addBefore(ItemStack anchor, Collection<ItemStack> stack) {
+			BEFORE.put(anchor, List.copyOf(stack));
 		}
 
 		public void addBefore(ItemStack anchor, ItemLike stack) {
@@ -172,8 +176,8 @@ public class CreativeTabEvent {
 			AFTER.put(anchor, List.of(stack));
 		}
 
-		public void addAfter(ItemStack anchor, List<ItemStack> stack) {
-			AFTER.put(anchor, stack);
+		public void addAfter(ItemStack anchor, Collection<ItemStack> stack) {
+			AFTER.put(anchor, List.copyOf(stack));
 		}
 
 		public void addAfter(ItemStack anchor, ItemLike stack) {
@@ -188,12 +192,29 @@ public class CreativeTabEvent {
 			addAfter(anchor.asItem().getDefaultInstance(), stack);
 		}
 
-		public void add(List<ItemStack> stack) {
+		public void add(Collection<ItemStack> stack) {
+			ADDITIONS.addAll(stack);
+		}
+
+		public void acceptAll(Collection<ItemStack> stack) {
 			ADDITIONS.addAll(stack);
 		}
 
 		public void add(ItemStack stack) {
 			ADDITIONS.add(stack);
 		}
+
+		public void accept(ItemStack stack) {
+			add(stack);
+		}
+
+		public void accept(ItemLike stack) {
+			add(stack);
+		}
+
+		public void add(ItemLike stack) {
+			add(stack.asItem().getDefaultInstance());
+		}
+
 	}
 }
