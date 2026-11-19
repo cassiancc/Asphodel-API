@@ -70,13 +70,17 @@ public class ConfigUtil {
 	}
 
 	public static KaleidoConfigFactory<Screen> create(String id, String name, Config config) {
+		ConfigRenderContext configRenderContext = new ConfigRenderContext(id, Component.literal(name), config);
 		if (ModCompat.YET_ANOTHER_CONFIG_LIB) {
-			return (s)->YetAnotherConfigFactory.create(id, Component.literal(name), config, s);
+			return (s)->YetAnotherConfigFactory.create(configRenderContext, s);
 		}
 		else if (ModCompat.CLOTH_CONFIG) {
-			return (s)->ClothConfigFactory.create(id, Component.literal(name), config, s);
+			return (s)->ClothConfigFactory.create(configRenderContext, s);
 		}
-		return (s) -> new KaleidoConfigScreen(id, Component.literal(name), config, s);
+		return (s) -> {
+
+			return new KaleidoConfigScreen(configRenderContext, s);
+		};
 	}
 
 	public static void fieldSetter(boolean instance, TrackedValue<Boolean> field) {
@@ -90,6 +94,9 @@ public class ConfigUtil {
 	}
 	public static void fieldSetter(Color instance, TrackedValue<Integer> field) {
 		field.setValue(instance.getRGB());
+	}
+
+	public record ConfigRenderContext(String id, MutableComponent modName, Config config) {
 	}
 
 	public interface KaleidoConfigFactory<S extends Screen> {

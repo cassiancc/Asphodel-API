@@ -37,30 +37,30 @@ public class YetAnotherConfigFactory {
 		}
 	}
 
-	public static Screen create(String id, Component modName, Config config, Screen parent) {
+	public static Screen create(ConfigRenderContext context, Screen parent) {
 		final YetAnotherConfigLib.Builder builder = YetAnotherConfigLib.createBuilder()
 				.title(Component.translatable("modmenu.nameTranslation.item_descriptions"));
 		LinkedHashMap<String, ConfigCategory.Builder> categories = new LinkedHashMap<>();
-		addEntries(config.values(), categories, modName);
+		addEntries(context, categories);
 		for (ConfigCategory.Builder s : categories.values()) {
 			builder.category(s.build());
 		}
 
 
-		builder.save(config::save);
+		builder.save(context.config()::save);
 		return builder.build().generateScreen(parent);
 	}
 
-	private static void addEntries(Iterable<TrackedValue<?>> fields, LinkedHashMap<String, ConfigCategory.Builder> categories, Component modName) {
+	private static void addEntries(ConfigRenderContext context, LinkedHashMap<String, ConfigCategory.Builder> categories) {
 
-		for (var field : fields) {
+		for (var field : context.config().values()) {
 			String categoryName = field.key().toString();
 			if (categoryName.contains(".")) {
 				categoryName = formatString(field.key().getKeyComponent(0));
 			} else {
 				categoryName = null;
 			}
-			var category = createCategory(categoryName, categories, modName);
+			var category = createCategory(categoryName, categories, context.modName());
 			OptionDescription optionDescription = OptionDescription.of(fieldTooltip(field).toArray(new Component[0]));
 			if (field.value().getClass() == Boolean.class) {
 				category.option(Option.<Boolean>createBuilder()

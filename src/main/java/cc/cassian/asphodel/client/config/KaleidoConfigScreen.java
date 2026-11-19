@@ -26,19 +26,16 @@ public class KaleidoConfigScreen extends Screen {
 	public static final int PADDING = 4;
 
 	private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this, 32, 32);
-	private final Config configs;
-	private final String id;
 	private final Screen parent;
+	private final ConfigRenderContext context;
 	public int buttonWidth;
 	protected ScrollableLayout scrollableLayout;
 
-	public KaleidoConfigScreen(String id, Component modName, Config config, Screen parent) {
-		super(modName);
-		this.id = id;
+	public KaleidoConfigScreen(ConfigRenderContext context, Screen parent) {
+		super(context.modName());
+		this.context = context;
 		this.parent = parent;
-		this.configs = config;
 	}
-
 
 	@Override
 	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
@@ -89,7 +86,7 @@ public class KaleidoConfigScreen extends Screen {
 
 		Map<String, GridData> layoutHelper = new LinkedHashMap<>();
 
-		for (TrackedValue<?> value : configs.values()) {
+		for (TrackedValue<?> value : context.config().values()) {
 			var first = value.key().getKeyComponent(0);
 			var last = value.key().getLastComponent();
 			GridLayout gridLayout = createGridLayout();
@@ -97,11 +94,11 @@ public class KaleidoConfigScreen extends Screen {
 			if (!Objects.equals(first, last)) {
 				layoutHelper.putIfAbsent(first, data);
 			} else {
-				layoutHelper.putIfAbsent(id, data);
+				layoutHelper.putIfAbsent(context.id(), data);
 			}
 		}
 
-		for (TrackedValue<?> value : configs.values()) {
+		for (TrackedValue<?> value : context.config().values()) {
 			addValue(value, layoutHelper);
 		}
 
@@ -140,7 +137,7 @@ public class KaleidoConfigScreen extends Screen {
 	}
 
 	private <T> GridLayout.RowHelper getHelper(TrackedValue<T> value, Map<String, GridData> generalHelper) {
-		return generalHelper.getOrDefault(value.key().getKeyComponent(0), generalHelper.get(id)).rowHelper();
+		return generalHelper.getOrDefault(value.key().getKeyComponent(0), generalHelper.get(context.id())).rowHelper();
 	}
 
 	static void finalizeLayout(LinearLayout linearLayout, HeaderAndFooterLayout layout, KaleidoConfigScreen screen) {
@@ -217,7 +214,7 @@ public class KaleidoConfigScreen extends Screen {
 
 	@Override
 	public void onClose() {
-		configs.save();
+		context.config().save();
 		HudUtils.setScreen(this.getParentScreen());
 	}
 

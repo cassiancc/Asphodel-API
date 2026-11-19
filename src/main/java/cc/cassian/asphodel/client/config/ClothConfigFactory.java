@@ -13,34 +13,34 @@ import static cc.cassian.asphodel.client.config.ConfigUtil.*;
 
 public class ClothConfigFactory {
 
-	private static ConfigCategory createCategory(String section, ConfigBuilder builder, String id, Component modName) {
+	private static ConfigCategory createCategory(String section, ConfigBuilder builder, ConfigRenderContext context) {
 		if (section == null) {
-			return builder.getOrCreateCategory(modName);
+			return builder.getOrCreateCategory(context.modName());
 		}
 		return builder.getOrCreateCategory(Component.literal(section));
 	}
 
-	public static Screen create(String id, Component modName, Config config, Screen parent) {
+	public static Screen create(ConfigRenderContext context, Screen parent) {
 		final var builder = ConfigBuilder.create()
 				.setParentScreen(parent)
-				.setTitle(modName);
+				.setTitle(context.modName());
 
-		addEntries(config.values(), builder, id, modName);
+		addEntries(context, builder);
 
-		builder.setSavingRunnable(config::save);
+		builder.setSavingRunnable(context.config()::save);
 		return builder.build();
 	}
 
-	private static void addEntries(Iterable<TrackedValue<?>> fields, ConfigBuilder builder, String id, Component modName) {
+	private static void addEntries(ConfigRenderContext context, ConfigBuilder builder) {
 		var entryBuilder = builder.entryBuilder();
-		for (TrackedValue<?> field : fields) {
+		for (TrackedValue<?> field : context.config().values()) {
 			String categoryName = field.key().toString();
 			if (categoryName.contains(".")) {
 				categoryName = formatString(field.key().getKeyComponent(0));
 			} else {
 				categoryName = null;
 			}
-			var category = createCategory(categoryName, builder, id, modName);
+			var category = createCategory(categoryName, builder, context);
 			Component[] tooltip = fieldTooltip(field).toArray(new Component[0]);
 			if (field.value().getClass() == Boolean.class) {
 				category.addEntry(entryBuilder.startBooleanToggle(fieldName(field), (boolean) field.value())
