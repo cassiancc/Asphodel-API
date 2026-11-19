@@ -1,18 +1,23 @@
 package cc.cassian.asphodel.client.config;
 
+import cc.cassian.asphodel.AsphodelAPI;
 import cc.cassian.asphodel.compat.ModCompat;
 import folk.sisby.kaleido.lib.quiltconfig.api.Config;
 import folk.sisby.kaleido.lib.quiltconfig.api.metadata.Comments;
 import folk.sisby.kaleido.lib.quiltconfig.api.values.TrackedValue;
+import folk.sisby.kaleido.lib.quiltconfig.api.values.ValueList;
+import folk.sisby.kaleido.lib.quiltconfig.impl.values.ValueListImpl;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.apache.commons.lang3.text.WordUtils;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigUtil {
+
 	protected static MutableComponent formatText(String key) {
 		return Component.literal(formatString(key));
 	}
@@ -70,17 +75,24 @@ public class ConfigUtil {
 	}
 
 	public static KaleidoConfigFactory<Screen> create(String id, String name, Config config) {
-		ConfigRenderContext configRenderContext = new ConfigRenderContext(id, Component.literal(name), config);
+		AsphodelAPI.LOGGER.info("Asphodel API: Added config screen for mod: {}", id);
+		ConfigRenderContext configRenderContext = new ConfigRenderContext(id, Component.translatableWithFallback("modmenu.nameTranslation." + name, name), config);
 		if (ModCompat.YET_ANOTHER_CONFIG_LIB) {
 			return (s)->YetAnotherConfigFactory.create(configRenderContext, s);
 		}
-		else if (ModCompat.CLOTH_CONFIG) {
+		if (ModCompat.CLOTH_CONFIG) {
 			return (s)->ClothConfigFactory.create(configRenderContext, s);
 		}
-		return (s) -> {
+		//? if >26 {
+		return (s) -> new KaleidoConfigScreen(configRenderContext, s);
+		//?} else {
+		/*return null;
+		*///?}
+	}
 
-			return new KaleidoConfigScreen(configRenderContext, s);
-		};
+	public static <T> void fieldSetter(List<T> instance, List<T> field) {
+		field.clear();
+		field.addAll(instance);
 	}
 
 	public static void fieldSetter(boolean instance, TrackedValue<Boolean> field) {

@@ -1,38 +1,39 @@
 package cc.cassian.asphodel.client.config;
 
-import dev.isxander.yacl3.api.ConfigCategory;
-import dev.isxander.yacl3.api.Option;
-import dev.isxander.yacl3.api.OptionDescription;
-import dev.isxander.yacl3.api.YetAnotherConfigLib;
-import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
-import dev.isxander.yacl3.api.controller.IntegerFieldControllerBuilder;
-import dev.isxander.yacl3.api.controller.StringControllerBuilder;
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
-import folk.sisby.kaleido.lib.quiltconfig.api.Config;
+import cc.cassian.asphodel.AsphodelAPI;
+import cc.cassian.asphodel.Platform;
+import dev.isxander.yacl3.api.*;
+import dev.isxander.yacl3.api.controller.*;
 import folk.sisby.kaleido.lib.quiltconfig.api.values.TrackedValue;
+import folk.sisby.kaleido.lib.quiltconfig.api.values.ValueList;
+import folk.sisby.kaleido.lib.quiltconfig.impl.values.ValueListImpl;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import static cc.cassian.asphodel.client.config.ConfigUtil.*;
 
 public class YetAnotherConfigFactory {
 
-	private static ConfigCategory.Builder createCategory(String section, LinkedHashMap<String, ConfigCategory.Builder> categories, Component modName) {
-		if (categories.containsKey(section)) {
-			return categories.get(section);
+	private static ConfigCategory.Builder createCategory(@Nullable String section, LinkedHashMap<String, ConfigCategory.Builder> categories, ConfigRenderContext context) {
+		String key = Objects.requireNonNullElse(section, context.id());
+		if (categories.containsKey(key)) {
+			return categories.get(key);
 		} else {
 			Component sectionKey;
 			if (section == null) {
-				sectionKey = modName;
+				sectionKey = context.modName();
 			} else {
 				sectionKey = Component.literal(section);
 			}
 			ConfigCategory.Builder category = ConfigCategory.createBuilder().name(sectionKey);
-			categories.put(section, category);
+			categories.put(key, category);
 			return category;
 		}
 	}
@@ -60,7 +61,7 @@ public class YetAnotherConfigFactory {
 			} else {
 				categoryName = null;
 			}
-			var category = createCategory(categoryName, categories, context.modName());
+			var category = createCategory(categoryName, categories, context);
 			OptionDescription optionDescription = OptionDescription.of(fieldTooltip(field).toArray(new Component[0]));
 			if (field.value().getClass() == Boolean.class) {
 				category.option(Option.<Boolean>createBuilder()
@@ -113,6 +114,23 @@ public class YetAnotherConfigFactory {
 							.build());
 				}
 
+			}
+			else if (field.value() instanceof ValueListImpl<?> list) {
+				if (list.isEmpty() || list.get(0).getClass() == String.class) {
+					category.group(ListOption.<String>createBuilder().initial("")
+							.name(fieldName(field))
+							.description(optionDescription)
+							.binding(
+									(List<String>) field.getDefaultValue(),
+									()-> (List<String>) field.value(),
+									(value)->fieldSetter(value, (ValueList<String>) field)
+							)
+							.controller(StringControllerBuilder::create)
+							.build());
+
+				}
+			} else if (Platform.INSTANCE.isDeveloperEnvironment()) {
+				AsphodelAPI.LOGGER.info("Unfamiliar with type {}", field.getDefaultValue().getClass());
 			}
 		}
 	}

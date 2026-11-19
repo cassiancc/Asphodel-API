@@ -1,7 +1,9 @@
+//? if >26 {
 package cc.cassian.asphodel.client.config;
 
+import cc.cassian.asphodel.AsphodelAPI;
+import cc.cassian.asphodel.Platform;
 import cc.cassian.asphodel.client.util.HudUtils;
-import folk.sisby.kaleido.lib.quiltconfig.api.Config;
 import folk.sisby.kaleido.lib.quiltconfig.api.values.TrackedValue;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -16,7 +18,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
-import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 
@@ -29,6 +30,7 @@ public class KaleidoConfigScreen extends Screen {
 	private final Screen parent;
 	private final ConfigRenderContext context;
 	public int buttonWidth;
+	@SuppressWarnings("all")
 	protected ScrollableLayout scrollableLayout;
 
 	public KaleidoConfigScreen(ConfigRenderContext context, Screen parent) {
@@ -38,8 +40,14 @@ public class KaleidoConfigScreen extends Screen {
 	}
 
 	@Override
-	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-		super.extractBackground(graphics, mouseX, mouseY, a);
+	public void extractBackground(GuiGraphicsExtractor graphics
+								  //? if <26.4
+			, int mouseX, int mouseY, float a
+	) {
+		super.extractBackground(graphics
+				//? if <26.4
+				, mouseX, mouseY, a
+		);
 		extractListBackground(graphics);
 		extractListSeparators(graphics);
 	}
@@ -103,7 +111,8 @@ public class KaleidoConfigScreen extends Screen {
 		}
 
 		layoutHelper.forEach((key, element)->{
-			linearLayout.addChild(new StringWidget(formatText(key), this.font));
+			var title = key.equals(context.id()) ? context.modName() : formatText(key);
+			linearLayout.addChild(new StringWidget(title, this.font));
 			linearLayout.addChild(element.gridLayout());
 		});
 
@@ -131,8 +140,12 @@ public class KaleidoConfigScreen extends Screen {
 			GridLayout.RowHelper helper = getHelper(value, generalHelper);
 			addStringOption(helper, (TrackedValue<String>) value, commentList, string);
 		}
-		else {
-//			System.out.println(value.value().getClass());
+		else if (value.value() instanceof Integer i) {
+			GridLayout.RowHelper helper = getHelper(value, generalHelper);
+			addIntegerOption(helper, (TrackedValue<Integer>) value, commentList, i);
+		}
+		else if (Platform.INSTANCE.isDeveloperEnvironment()) {
+			AsphodelAPI.LOGGER.info("Unfamiliar with type {}", value.getDefaultValue().getClass());
 		}
 	}
 
@@ -173,13 +186,29 @@ public class KaleidoConfigScreen extends Screen {
 	}
 
 	private void addStringOption(GridLayout.RowHelper linearLayout, TrackedValue<String> value, List<Component> tooltip, String currentValue) {
-		StringEditBox widget = new StringEditBox(font, buttonWidth, 20, Component.empty());
+		FormattedEditBox widget = new FormattedEditBox(font, buttonWidth, 20, Component.empty());
 		widget.setHint(fieldName(value));
 		widget.setValue(currentValue);
 		widget.setResponder((newValue )-> {
 			widget.parsed = true;
 			try {
 				value.setValue(newValue);
+			} catch (Exception ignored) {
+				widget.parsed = false;
+			}
+		});
+		addTooltip(tooltip, widget);
+		linearLayout.addChild(widget);
+	}
+
+	private void addIntegerOption(GridLayout.RowHelper linearLayout, TrackedValue<Integer> value, List<Component> tooltip, Integer currentValue) {
+		FormattedEditBox widget = new FormattedEditBox(font, buttonWidth, 20, Component.empty());
+		widget.setHint(fieldName(value));
+		widget.setValue(String.valueOf(currentValue));
+		widget.setResponder((newValue )-> {
+			widget.parsed = true;
+			try {
+				value.setValue(Integer.valueOf(newValue));
 			} catch (Exception ignored) {
 				widget.parsed = false;
 			}
@@ -200,7 +229,7 @@ public class KaleidoConfigScreen extends Screen {
 		}
 	}
 
-	private static @NonNull Tooltip getTooltip(List<Component> comments) {
+	private static Tooltip getTooltip(List<Component> comments) {
 		MutableComponent builder = Component.empty();
 		for (int i = 0; i < comments.size(); i++) {
 			if (i > 0) {
@@ -225,3 +254,4 @@ public class KaleidoConfigScreen extends Screen {
 	private record GridData(GridLayout gridLayout, GridLayout.RowHelper rowHelper) {
 	}
 }
+//?}

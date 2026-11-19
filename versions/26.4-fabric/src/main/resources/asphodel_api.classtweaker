@@ -13,3 +13,5 @@ transitive-accessible method net/minecraft/core/particles/SimpleParticleType <in
 transitive-accessible class net/minecraft/client/gui/Hud$HeartType
 accessible field net/minecraft/client/gui/components/ScrollableLayout container Lnet/minecraft/client/gui/components/ScrollableLayout$Container;
 accessible class net/minecraft/client/gui/components/ScrollableLayout$Container
+accessible field net/minecraft/client/gui/screens/Screen INWORLD_HEADER_SEPARATOR Lnet/minecraft/resources/Identifier;
+accessible field net/minecraft/client/gui/screens/Screen INWORLD_FOOTER_SEPARATOR Lnet/minecraft/resources/Identifier;

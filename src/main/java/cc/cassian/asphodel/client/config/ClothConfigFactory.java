@@ -1,19 +1,23 @@
 package cc.cassian.asphodel.client.config;
 
-import folk.sisby.kaleido.lib.quiltconfig.api.Config;
+import cc.cassian.asphodel.AsphodelAPI;
+import cc.cassian.asphodel.Platform;
 import folk.sisby.kaleido.lib.quiltconfig.api.values.TrackedValue;
+import folk.sisby.kaleido.lib.quiltconfig.impl.values.ValueListImpl;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.List;
 
 import static cc.cassian.asphodel.client.config.ConfigUtil.*;
 
 public class ClothConfigFactory {
 
-	private static ConfigCategory createCategory(String section, ConfigBuilder builder, ConfigRenderContext context) {
+	private static ConfigCategory createCategory(@Nullable String section, ConfigBuilder builder, ConfigRenderContext context) {
 		if (section == null) {
 			return builder.getOrCreateCategory(context.modName());
 		}
@@ -61,12 +65,14 @@ public class ClothConfigFactory {
 						.setTooltip(tooltip)
 						.setDefaultValue((int) field.getDefaultValue()).build());
 			}
-//            else if (field.getType() == List.class) {
-//                category.addEntry(entryBuilder.startStrList(fieldName(field, categoryName), fieldGet(config, field))
-//                        .setSaveConsumer(fieldSetter(config, field))
-//                        .setTooltip(tooltip)
-//                        .setDefaultValue((List<String>) fieldGet(defaultValues, field)).build());
-//            }
+            else if (field.value().getClass() == ValueListImpl.class) {
+                category.addEntry(entryBuilder.startStrList(fieldName(field), (List<String>) field.value())
+                        .setSaveConsumer(o->fieldSetter(o, (List<String>) field))
+                        .setTooltip(tooltip)
+                        .setDefaultValue((List<String>) field.getDefaultValue()).build());
+            } else if (Platform.INSTANCE.isDeveloperEnvironment()) {
+				AsphodelAPI.LOGGER.info("Unfamiliar with type {}", field.getDefaultValue().getClass());
+			}
 		}
 	}
 
