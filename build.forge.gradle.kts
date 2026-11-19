@@ -198,6 +198,8 @@ legacyForge {
 
 
 dependencies {
+    implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
+    jarJar("folk.sisby:kaleido-config:${property("deps.kaleido")}")
 
     // Cloth Config
     modImplementation("me.shedaniel.cloth:cloth-config-forge:${mod.dep("cloth_version")}")

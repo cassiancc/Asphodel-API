@@ -21,6 +21,9 @@
 		],
 		"client": [
 			"cc.cassian.asphodel.client.fabric.FabricClientEvents"
+		],
+		"modmenu": [
+			"cc.cassian.asphodel.compat.ModMenuCompat"
 		]
 	},
 	"mixins": [

@@ -9,9 +9,11 @@ Asphodel API does not contain any content on its own. It should only be installe
 Yes, this is another moddername library. I work on over 50 mods at this point spread across a variety of versions, and every library I contribute code to keeps discontinuing versions I have to maintain or isn't available for snapshots. Builds of these will generally be included with most mods, but having a published version allows for my mods that use universal JARs to depend on Asphodel API rather than have to unnecessarily upload two JARs with otherwise identical content.
 
 ## Features
-- Simplified block/item registration.
-- Universal interface for retrieving an object's `Identifier`.
-- A lightweight deferred registration implementation for easily porting mods away from Forge.
+- Automatic config screens for mods using [Kaleido Config](https://github.com/sleepingdragoninn/kaleido-config/).
+- Registration utilities.
+  - Universal entrypoints for block/item registration.
+  - Alternatively, a lightweight deferred registration implementation for easily porting mods away from Forge.
+  - Universal interface for retrieving an object's `Identifier`.
 - Multiversion-friendly block and item tag data generators.
 - Common code-friendly implementation of the Fabric/NeoForge conventional tags.
 - Event dispatcher system for safely dispatching multiloader/multiversioned events.

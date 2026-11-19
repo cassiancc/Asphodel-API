@@ -189,11 +189,7 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
 
     implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
-    if (stonecutter.eval(mcVersion, ">26")) {
-        modLocalRuntime("maven.modrinth:mcqoy:0.4.1+fabric-26.1")
-    } else {
-        modLocalRuntime("maven.modrinth:mcqoy:k8u6AZVM")
-    }
+    include("folk.sisby:kaleido-config:${property("deps.kaleido")}")
 
     // Cloth Config
     modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${mod.dep("cloth")}")

@@ -1,0 +1,31 @@
+package cc.cassian.asphodel.compat;
+
+import cc.cassian.asphodel.Platform;
+import cc.cassian.asphodel.client.config.KaleidoConfigScreen;
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
+import folk.sisby.kaleido.lib.quiltconfig.impl.util.ConfigsImpl;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.network.chat.Component;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class ModMenuCompat implements ModMenuApi {
+
+	@Override
+	public Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
+		// mcqoy's looks better at the moment
+		if (Platform.INSTANCE.isModLoaded("mcqoy")) {return Map.of();}
+
+		var map = new HashMap<String, ConfigScreenFactory<?>>();
+		ConfigsImpl.getAll().iterator().forEachRemaining(config -> {
+			FabricLoader.getInstance().getModContainer(config.id()).ifPresent(container -> {
+				String id = container.getMetadata().getId();
+				map.put(id, (s) -> new KaleidoConfigScreen(container.getMetadata().getId(), Component.literal(container.getMetadata().getName()), config, s));
+			});
+		});
+
+		return map;
+	}
+}

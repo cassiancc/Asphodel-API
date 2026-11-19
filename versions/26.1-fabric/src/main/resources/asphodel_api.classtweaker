@@ -9,3 +9,5 @@ transitive-inject-interface net/minecraft/sounds/SoundEvent cc/cassian/asphodel/
 transitive-inject-interface net/minecraft/world/entity/EntityType cc/cassian/asphodel/references/Identifiable
 transitive-accessible method net/minecraft/core/particles/SimpleParticleType <init> (Z)V
 transitive-accessible class net/minecraft/client/gui/Gui$HeartType
+accessible field net/minecraft/client/gui/components/ScrollableLayout container Lnet/minecraft/client/gui/components/ScrollableLayout$Container;
+accessible class net/minecraft/client/gui/components/ScrollableLayout$Container
