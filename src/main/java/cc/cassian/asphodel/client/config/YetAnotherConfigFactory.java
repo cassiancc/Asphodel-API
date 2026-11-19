@@ -21,7 +21,7 @@ import static cc.cassian.asphodel.client.config.ConfigUtil.*;
 
 public class YetAnotherConfigFactory {
 
-	private static ConfigCategory.Builder createCategory(@Nullable String section, LinkedHashMap<String, ConfigCategory.Builder> categories, ConfigRenderContext context) {
+	private static ConfigCategory.Builder createCategory(@Nullable String section, LinkedHashMap<String, ConfigCategory.Builder> categories, ConfigScreenContext context) {
 		String key = Objects.requireNonNullElse(section, context.id());
 		if (categories.containsKey(key)) {
 			return categories.get(key);
@@ -38,7 +38,7 @@ public class YetAnotherConfigFactory {
 		}
 	}
 
-	public static Screen create(ConfigRenderContext context, Screen parent) {
+	public static Screen create(ConfigScreenContext context, Screen parent) {
 		final YetAnotherConfigLib.Builder builder = YetAnotherConfigLib.createBuilder()
 				.title(Component.translatable("modmenu.nameTranslation.item_descriptions"));
 		LinkedHashMap<String, ConfigCategory.Builder> categories = new LinkedHashMap<>();
@@ -52,7 +52,7 @@ public class YetAnotherConfigFactory {
 		return builder.build().generateScreen(parent);
 	}
 
-	private static void addEntries(ConfigRenderContext context, LinkedHashMap<String, ConfigCategory.Builder> categories) {
+	private static void addEntries(ConfigScreenContext context, LinkedHashMap<String, ConfigCategory.Builder> categories) {
 
 		for (var field : context.config().values()) {
 			String categoryName = field.key().toString();

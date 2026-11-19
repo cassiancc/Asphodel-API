@@ -217,6 +217,9 @@ tasks {
 dependencies {
     implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     jarJar("folk.sisby:kaleido-config:${property("deps.kaleido")}")
+    if (stonecutter.eval(mcVersion, "<1.21.9")) {
+        "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${property("deps.kaleido")}")
+    }
 
     // Cloth Config
     if (hasProperty("deps.cloth_version")) {

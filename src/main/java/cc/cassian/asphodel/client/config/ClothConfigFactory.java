@@ -10,21 +10,20 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.Color;
 import java.util.List;
 
 import static cc.cassian.asphodel.client.config.ConfigUtil.*;
 
 public class ClothConfigFactory {
 
-	private static ConfigCategory createCategory(@Nullable String section, ConfigBuilder builder, ConfigRenderContext context) {
+	private static ConfigCategory createCategory(@Nullable String section, ConfigBuilder builder, ConfigScreenContext context) {
 		if (section == null) {
 			return builder.getOrCreateCategory(context.modName());
 		}
 		return builder.getOrCreateCategory(Component.literal(section));
 	}
 
-	public static Screen create(ConfigRenderContext context, Screen parent) {
+	public static Screen create(ConfigScreenContext context, Screen parent) {
 		final var builder = ConfigBuilder.create()
 				.setParentScreen(parent)
 				.setTitle(context.modName());
@@ -35,7 +34,7 @@ public class ClothConfigFactory {
 		return builder.build();
 	}
 
-	private static void addEntries(ConfigRenderContext context, ConfigBuilder builder) {
+	private static void addEntries(ConfigScreenContext context, ConfigBuilder builder) {
 		var entryBuilder = builder.entryBuilder();
 		for (TrackedValue<?> field : context.config().values()) {
 			String categoryName = field.key().toString();

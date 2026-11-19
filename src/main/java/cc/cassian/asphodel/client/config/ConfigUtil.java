@@ -1,13 +1,9 @@
 package cc.cassian.asphodel.client.config;
 
 import cc.cassian.asphodel.AsphodelAPI;
-import cc.cassian.asphodel.compat.ModCompat;
 import folk.sisby.kaleido.lib.quiltconfig.api.Config;
 import folk.sisby.kaleido.lib.quiltconfig.api.metadata.Comments;
 import folk.sisby.kaleido.lib.quiltconfig.api.values.TrackedValue;
-import folk.sisby.kaleido.lib.quiltconfig.api.values.ValueList;
-import folk.sisby.kaleido.lib.quiltconfig.impl.values.ValueListImpl;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.apache.commons.lang3.text.WordUtils;
@@ -74,20 +70,9 @@ public class ConfigUtil {
 		return commentList;
 	}
 
-	public static KaleidoConfigFactory<Screen> create(String id, String name, Config config) {
-		AsphodelAPI.LOGGER.info("Asphodel API: Added config screen for mod: {}", id);
-		ConfigRenderContext configRenderContext = new ConfigRenderContext(id, Component.translatableWithFallback("modmenu.nameTranslation." + name, name), config);
-		if (ModCompat.YET_ANOTHER_CONFIG_LIB) {
-			return (s)->YetAnotherConfigFactory.create(configRenderContext, s);
-		}
-		if (ModCompat.CLOTH_CONFIG) {
-			return (s)->ClothConfigFactory.create(configRenderContext, s);
-		}
-		//? if >26 {
-		return (s) -> new KaleidoConfigScreen(configRenderContext, s);
-		//?} else {
-		/*return null;
-		*///?}
+	public static ConfigScreenContext createContext(String modId, String name, Config config) {
+		AsphodelAPI.LOGGER.info("Asphodel API: Added config screen for mod: {}", modId);
+		return new ConfigScreenContext(modId, Component.translatableWithFallback("modmenu.nameTranslation." + name, name), config);
 	}
 
 	public static <T> void fieldSetter(List<T> instance, List<T> field) {
@@ -108,10 +93,5 @@ public class ConfigUtil {
 		field.setValue(instance.getRGB());
 	}
 
-	public record ConfigRenderContext(String id, MutableComponent modName, Config config) {
-	}
 
-	public interface KaleidoConfigFactory<S extends Screen> {
-		S create(Screen var1);
-	}
 }

@@ -23,20 +23,16 @@ import java.util.*;
 
 import static cc.cassian.asphodel.client.config.ConfigUtil.*;
 
-public class KaleidoConfigScreen extends Screen {
-	public static final int PADDING = 4;
-
+public class KaleidoConfigScreen extends AbstractConfigScreen {
 	private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this, 32, 32);
-	private final Screen parent;
-	private final ConfigRenderContext context;
+	private final ConfigScreenContext context;
 	public int buttonWidth;
 	@SuppressWarnings("all")
 	protected ScrollableLayout scrollableLayout;
 
-	public KaleidoConfigScreen(ConfigRenderContext context, Screen parent) {
-		super(context.modName());
+	public KaleidoConfigScreen(ConfigScreenContext context, Screen parent) {
+		super(context.modName(), parent);
 		this.context = context;
-		this.parent = parent;
 	}
 
 	@Override
@@ -51,9 +47,6 @@ public class KaleidoConfigScreen extends Screen {
 		extractListBackground(graphics);
 		extractListSeparators(graphics);
 	}
-
-	private static final Identifier MENU_LIST_BACKGROUND = Identifier.withDefaultNamespace("textures/gui/menu_list_background.png");
-	private static final Identifier INWORLD_MENU_LIST_BACKGROUND = Identifier.withDefaultNamespace("textures/gui/inworld_menu_list_background.png");
 
 	protected void extractListBackground(final GuiGraphicsExtractor graphics) {
 		Identifier menuListBackground = this.minecraft.level == null ? MENU_LIST_BACKGROUND : INWORLD_MENU_LIST_BACKGROUND;
@@ -78,8 +71,6 @@ public class KaleidoConfigScreen extends Screen {
 		HudUtils.blit(graphics, headerSeparator, 0, scrollableLayout.getY() - PADDING - 2, 0.0F, 0.0F, this.width, 2, 32, 2);
 		HudUtils.blit(graphics, footerSeparator, 0, scrollableLayout.getY()+ scrollableLayout.getHeight(), 0.0F, 0.0F, this.width, 2, 32, 2);
 	}
-
-
 
 	@Override
 	protected void init() {
@@ -163,12 +154,6 @@ public class KaleidoConfigScreen extends Screen {
 		layout.arrangeElements();
 	}
 
-	GridLayout createGridLayout() {
-		var gridLayout = new GridLayout();
-		gridLayout.defaultCellSetting().paddingHorizontal(4).paddingBottom(4).alignHorizontallyCenter();
-		return gridLayout;
-	}
-
 	private <T extends Enum<?>> void addEnumOption(GridLayout.RowHelper linearLayout, Component key, List<Component> comments, T initialValue, T[] values, CycleButton.OnValueChange<T> newValueSetter) {
 		CycleButton<T> widget = CycleButton.builder((value) -> formatText(String.valueOf(value)).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GOLD)), initialValue)
 				.withValues(values)
@@ -244,11 +229,7 @@ public class KaleidoConfigScreen extends Screen {
 	@Override
 	public void onClose() {
 		context.config().save();
-		HudUtils.setScreen(this.getParentScreen());
-	}
-
-	private Screen getParentScreen() {
-		return parent;
+		super.onClose();
 	}
 
 	private record GridData(GridLayout gridLayout, GridLayout.RowHelper rowHelper) {
