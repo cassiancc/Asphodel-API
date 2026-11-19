@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.apache.commons.lang3.text.WordUtils;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class ConfigUtil {
@@ -69,10 +70,26 @@ public class ConfigUtil {
 	}
 
 	public static KaleidoConfigFactory<Screen> create(String id, String name, Config config) {
-		if (ModCompat.CLOTH_CONFIG) {
+		if (ModCompat.YET_ANOTHER_CONFIG_LIB) {
+			return (s)->YetAnotherConfigFactory.create(id, Component.literal(name), config, s);
+		}
+		else if (ModCompat.CLOTH_CONFIG) {
 			return (s)->ClothConfigFactory.create(id, Component.literal(name), config, s);
 		}
 		return (s) -> new KaleidoConfigScreen(id, Component.literal(name), config, s);
+	}
+
+	public static void fieldSetter(boolean instance, TrackedValue<Boolean> field) {
+		field.setValue(instance);
+	}
+	public static void fieldSetter(Integer instance, TrackedValue<Integer> field) {
+		field.setValue(instance);
+	}
+	public static void fieldSetter(String instance, TrackedValue<String> field) {
+		field.setValue(instance);
+	}
+	public static void fieldSetter(Color instance, TrackedValue<Integer> field) {
+		field.setValue(instance.getRGB());
 	}
 
 	public interface KaleidoConfigFactory<S extends Screen> {
