@@ -64,6 +64,18 @@ public class ClothConfigFactory {
 						.setTooltip(tooltip)
 						.setDefaultValue((int) field.getDefaultValue()).build());
 			}
+			else if (field.value().getClass() == Float.class) {
+				category.addEntry(entryBuilder.startFloatField(fieldName(field), (float) field.value())
+						.setSaveConsumer((o)-> fieldSetter(o, (TrackedValue<Float>) field))
+						.setTooltip(tooltip)
+						.setDefaultValue((float) field.getDefaultValue()).build());
+			}
+			else if (field.value().getClass() == Double.class) {
+				category.addEntry(entryBuilder.startDoubleField(fieldName(field), (float) field.value())
+						.setSaveConsumer((o)-> fieldSetter(o, (TrackedValue<Double>) field))
+						.setTooltip(tooltip)
+						.setDefaultValue((double) field.getDefaultValue()).build());
+			}
             else if (field.value().getClass() == ValueListImpl.class) {
                 category.addEntry(entryBuilder.startStrList(fieldName(field), (List<String>) field.value())
                         .setSaveConsumer(o->fieldSetter(o, (List<String>) field))

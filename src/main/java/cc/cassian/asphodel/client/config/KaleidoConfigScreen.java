@@ -20,6 +20,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 
 import static cc.cassian.asphodel.client.config.ConfigUtil.*;
 
@@ -119,21 +120,24 @@ public class KaleidoConfigScreen extends AbstractConfigScreen {
 
 	private <T> void addValue(TrackedValue<T> value, Map<String, GridData> generalHelper) {
 		var commentList = fieldTooltip(value);
+		GridLayout.RowHelper helper = getHelper(value, generalHelper);
 		if (value.value() instanceof Boolean b) {
-			GridLayout.RowHelper helper = getHelper(value, generalHelper);
 			addBooleanOption(helper, fieldName(value), commentList,  b, (cycleButton, newValue )-> value.setValue((T) newValue));
 		}
 		else if (value.value() instanceof Enum<?> e) {
-			GridLayout.RowHelper helper = getHelper(value, generalHelper);
 			addEnumOption(helper, fieldName(value), commentList, e, e.getClass().getEnumConstants(),  (cycleButton, newValue )-> value.setValue((T) newValue));
 		}
 		else if (value.value() instanceof String string) {
-			GridLayout.RowHelper helper = getHelper(value, generalHelper);
 			addStringOption(helper, (TrackedValue<String>) value, commentList, string);
 		}
 		else if (value.value() instanceof Integer i) {
-			GridLayout.RowHelper helper = getHelper(value, generalHelper);
 			addIntegerOption(helper, (TrackedValue<Integer>) value, commentList, i);
+		}
+		else if (value.value() instanceof Float i) {
+			addFloatOption(helper, (TrackedValue<Float>) value, commentList, i);
+		}
+		else if (value.value() instanceof Double i) {
+			addDoubleOption(helper, (TrackedValue<Double>) value, commentList, i);
 		}
 		else if (Platform.INSTANCE.isDeveloperEnvironment()) {
 			AsphodelAPI.LOGGER.info("Unfamiliar with type {}", value.getDefaultValue().getClass());
@@ -159,9 +163,7 @@ public class KaleidoConfigScreen extends AbstractConfigScreen {
 				.withValues(values)
 				.create(0, 0, buttonWidth, 20, key, newValueSetter);
 		addTooltip(comments, widget);
-		linearLayout.addChild(
-				widget
-		);
+		linearLayout.addChild(widget);
 	}
 
 	private void addBooleanOption(GridLayout.RowHelper linearLayout, Component key, List<Component> tooltip, boolean currentValue, CycleButton.OnValueChange<Boolean> newValueSetter) {
@@ -171,10 +173,7 @@ public class KaleidoConfigScreen extends AbstractConfigScreen {
 	}
 
 	private void addStringOption(GridLayout.RowHelper linearLayout, TrackedValue<String> value, List<Component> tooltip, String currentValue) {
-		FormattedEditBox widget = new FormattedEditBox(font, buttonWidth, 20, Component.empty());
-		widget.setHint(fieldName(value));
-		widget.setValue(currentValue);
-		widget.setResponder((newValue )-> {
+		addFormattedEditBox(linearLayout, value, tooltip, currentValue, (newValue, widget )-> {
 			widget.parsed = true;
 			try {
 				value.setValue(newValue);
@@ -182,15 +181,10 @@ public class KaleidoConfigScreen extends AbstractConfigScreen {
 				widget.parsed = false;
 			}
 		});
-		addTooltip(tooltip, widget);
-		linearLayout.addChild(widget);
 	}
 
 	private void addIntegerOption(GridLayout.RowHelper linearLayout, TrackedValue<Integer> value, List<Component> tooltip, Integer currentValue) {
-		FormattedEditBox widget = new FormattedEditBox(font, buttonWidth, 20, Component.empty());
-		widget.setHint(fieldName(value));
-		widget.setValue(String.valueOf(currentValue));
-		widget.setResponder((newValue )-> {
+		addFormattedEditBox(linearLayout, value, tooltip, currentValue, (newValue, widget )-> {
 			widget.parsed = true;
 			try {
 				value.setValue(Integer.valueOf(newValue));
@@ -198,15 +192,38 @@ public class KaleidoConfigScreen extends AbstractConfigScreen {
 				widget.parsed = false;
 			}
 		});
+	}
+
+	private void addFloatOption(GridLayout.RowHelper linearLayout, TrackedValue<Float> value, List<Component> tooltip, Float currentValue) {
+		addFormattedEditBox(linearLayout, value, tooltip, currentValue, (newValue, widget )-> {
+			widget.parsed = true;
+			try {
+				value.setValue(Float.valueOf(newValue));
+			} catch (Exception ignored) {
+				widget.parsed = false;
+			}
+		});
+	}
+
+	private void addDoubleOption(GridLayout.RowHelper linearLayout, TrackedValue<Double> value, List<Component> tooltip, Double currentValue) {
+		addFormattedEditBox(linearLayout, value, tooltip, currentValue, (newValue, widget )-> {
+			widget.parsed = true;
+			try {
+				value.setValue(Double.valueOf(newValue));
+			} catch (Exception ignored) {
+				widget.parsed = false;
+			}
+		});
+	}
+
+	private <T> void addFormattedEditBox(GridLayout.RowHelper linearLayout, TrackedValue<T> value, List<Component> tooltip, T currentValue, BiConsumer<String, FormattedEditBox> responder) {
+		FormattedEditBox widget = new FormattedEditBox(font, buttonWidth, 20, Component.empty());
+		widget.setHint(fieldName(value));
+		widget.setValue(String.valueOf(currentValue));
+		widget.setResponder(s->responder.accept(s, widget));
 		addTooltip(tooltip, widget);
 		linearLayout.addChild(widget);
 	}
-
-//	private void addIntegerOption(GridLayout.RowHelper linearLayout, String key, int currentValue, CycleButton.OnValueChange<Integer> newValueSetter) {
-//		CycleButton<Integer> widget = CycleButton.builder(c-> c == 0 ? Component.translatable("options.guiScale.auto") : Component.translatable("rrv.client_settings.unit.items", String.valueOf(c)), currentValue).withValues(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15).create(0, 0, buttonWidth, 20, clientSetting(key), newValueSetter);
-//		addTooltip(key, widget);
-//		linearLayout.addChild(widget);
-//	}
 
 	private static void addTooltip(List<Component> comments, AbstractWidget widget) {
 		if (!comments.isEmpty()) {
@@ -232,7 +249,6 @@ public class KaleidoConfigScreen extends AbstractConfigScreen {
 		super.onClose();
 	}
 
-	private record GridData(GridLayout gridLayout, GridLayout.RowHelper rowHelper) {
-	}
+	private record GridData(GridLayout gridLayout, GridLayout.RowHelper rowHelper) { }
 }
 //?}

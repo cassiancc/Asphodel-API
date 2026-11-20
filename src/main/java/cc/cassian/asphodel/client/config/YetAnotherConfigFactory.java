@@ -115,6 +115,42 @@ public class YetAnotherConfigFactory {
 				}
 
 			}
+			else if (field.value().getClass() == Float.class) {
+				category.option(Option.<Float>createBuilder()
+						.name(fieldName(field))
+						.description(optionDescription)
+						.binding(
+								(Float) field.getDefaultValue(),
+								()-> (Float) field.value(),
+								(value)->fieldSetter(value, (TrackedValue<Float>) field)
+						)
+						.controller(FloatFieldControllerBuilder::create)
+						.build());
+			}
+			else if (field.value().getClass() == Double.class) {
+				category.option(Option.<Double>createBuilder()
+						.name(fieldName(field))
+						.description(optionDescription)
+						.binding(
+								(Double) field.getDefaultValue(),
+								()-> (Double) field.value(),
+								(value)->fieldSetter(value, (TrackedValue<Double>) field)
+						)
+						.controller(DoubleFieldControllerBuilder::create)
+						.build());
+			}
+			else if (field.value() instanceof Enum<?> e) {
+				category.option(Option.<Enum>createBuilder()
+						.name(fieldName(field))
+						.description(optionDescription)
+						.binding(
+								(Enum) field.getDefaultValue(),
+								()-> (Enum) field.value(),
+								(value)->fieldSetter(value, (TrackedValue<Enum>) field)
+						)
+						.controller(option -> EnumControllerBuilder.create(option).enumClass((Class<Enum>) e.getClass()))
+						.build());
+			}
 			else if (field.value() instanceof ValueListImpl<?> list) {
 				if (list.isEmpty() || list.get(0).getClass() == String.class) {
 					category.group(ListOption.<String>createBuilder().initial("")

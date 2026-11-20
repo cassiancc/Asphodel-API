@@ -80,15 +80,10 @@ public class ConfigUtil {
 		field.addAll(instance);
 	}
 
-	public static void fieldSetter(boolean instance, TrackedValue<Boolean> field) {
+	public static <T> void fieldSetter(T instance, TrackedValue<T> field) {
 		field.setValue(instance);
 	}
-	public static void fieldSetter(Integer instance, TrackedValue<Integer> field) {
-		field.setValue(instance);
-	}
-	public static void fieldSetter(String instance, TrackedValue<String> field) {
-		field.setValue(instance);
-	}
+
 	public static void fieldSetter(Color instance, TrackedValue<Integer> field) {
 		field.setValue(instance.getRGB());
 	}
