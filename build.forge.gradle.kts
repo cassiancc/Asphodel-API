@@ -302,7 +302,6 @@ val additionalVersions: List<String> = additionalVersionsStr
 
 publishMods {
     file = (tasks.named<org.gradle.jvm.tasks.Jar>("reobfJar").map { it.archiveFile.get() })
-    additionalFiles.from(tasks.named<org.gradle.jvm.tasks.Jar>("sourcesJar").map { it.archiveFile.get() })
 
     type = BETA
     displayName = "${property("mod.name")} ${property("mod.version")} for ${stonecutter.current.version} Forge"
@@ -311,10 +310,15 @@ publishMods {
     modLoaders.add("forge")
 
     modrinth {
+        additionalFile(tasks.named<org.gradle.jvm.tasks.Jar>("sourcesJar")) {
+            type.set(SOURCES_JAR)
+        }
         projectId = property("publish.modrinth") as String
         accessToken = env.MODRINTH_API_KEY.orNull()
         minecraftVersions.add(stonecutter.current.version)
         minecraftVersions.addAll(additionalVersions)
+        environment = CLIENT_AND_SERVER
+        requires("yacl")
     }
 
     curseforge {
@@ -324,6 +328,7 @@ publishMods {
         minecraftVersions.addAll(additionalVersions)
         client = true
         server = true
+        requires("yacl")
     }
 }
 

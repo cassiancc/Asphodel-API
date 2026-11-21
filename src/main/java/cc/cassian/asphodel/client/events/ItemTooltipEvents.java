@@ -22,8 +22,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ItemTooltipEvents {
-	protected static void modifyItemTooltip(String modId, Consumer<TooltipAccess> tooltip) {
+public final class ItemTooltipEvents {
+	static void modifyItemTooltip(String modId, Consumer<TooltipAccess> tooltip) {
 		//? fabric{
 		ItemTooltipCallback.EVENT.register((itemStack,
 											//? if >1.21

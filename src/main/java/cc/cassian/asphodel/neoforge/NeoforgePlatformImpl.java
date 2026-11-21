@@ -45,17 +45,17 @@ public class NeoforgePlatformImpl implements Platform {
     @Override
     public boolean isDeveloperEnvironment() {
         //? if >1.21.9 {
-        /^return !FMLEnvironment.isProduction();
-        ^///?} else {
-        return !FMLEnvironment.production;
-        //?}
+        return !FMLEnvironment.isProduction();
+        //?} else {
+        /^return !FMLEnvironment.production;
+        ^///?}
 
     }
 
     @Override
     public boolean isClientSide() {
         //~ if >1.21.9 'dist'->'getDist()'
-        return FMLEnvironment.dist.isClient();
+        return FMLEnvironment.getDist().isClient();
     }
 }
 *///?}

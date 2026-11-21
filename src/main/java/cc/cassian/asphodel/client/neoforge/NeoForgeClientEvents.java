@@ -45,7 +45,7 @@ public class NeoForgeClientEvents {
 		// mcqoy's look better at the moment
 		if (Platform.INSTANCE.isModLoaded("mcqoy")) return;
 		//? if <26
-		if (!ModCompat.YET_ANOTHER_CONFIG_LIB && !ModCompat.CLOTH_CONFIG) return;
+		//if (!ModCompat.YET_ANOTHER_CONFIG_LIB && !ModCompat.CLOTH_CONFIG) return;
 
 		ConfigsImpl.getAll().iterator().forEachRemaining(config -> {
 			if (config.family().isBlank()) {

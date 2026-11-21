@@ -356,21 +356,27 @@ val additionalVersions: List<String> = additionalVersionsStr
 
 publishMods {
     file = loomx.modJar.map { it.archiveFile.get() }
-    additionalFiles.from(loomx.modSourcesJar.map { it.archiveFile.get() })
 
     // one of BETA, ALPHA, STABLE
-    type = STABLE
+    type = if (stonecutter.eval(mcVersion, ">1.21"))
+        STABLE
+    else
+        BETA
     displayName = "${property("mod.name")} ${property("mod.version")} for ${stonecutter.current.version} Fabric"
     version = "${property("mod.version")}+${property("deps.minecraft")}-fabric"
     changelog = provider { rootProject.file("CHANGELOG-LATEST.md").readText() }
     modLoaders.add("fabric")
 
     modrinth {
+        additionalFile(loomx.modSourcesJar) {
+            type.set(SOURCES_JAR)
+        }
         projectId = property("publish.modrinth") as String
         accessToken = env.MODRINTH_API_KEY.orNull()
         minecraftVersions.add(property("deps.minecraft") as String)
         minecraftVersions.addAll(additionalVersions)
         requires("fabric-api")
+        requires("yacl")
         environment = CLIENT_AND_SERVER
     }
 
@@ -380,6 +386,7 @@ publishMods {
         minecraftVersions.add(property("deps.minecraft") as String)
         minecraftVersions.addAll(additionalVersions)
         requires("fabric-api")
+        requires("yacl")
         client = true
         server = true
     }

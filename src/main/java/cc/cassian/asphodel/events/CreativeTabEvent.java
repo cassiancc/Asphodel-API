@@ -29,8 +29,8 @@ import net.neoforged.bus.api.EventPriority;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class CreativeTabEvent {
-	protected static void modifyEntries(String modId, ResourceKey<CreativeModeTab> tab, Consumer<CreativeTabPlacements> tabPlacements) {
+public final class CreativeTabEvent {
+	static void modifyEntries(String modId, ResourceKey<CreativeModeTab> tab, Consumer<CreativeTabPlacements> tabPlacements) {
 		//? fabric && >26{
 		CreativeModeTabEvents.MODIFY_OUTPUT_ALL.register((creativeModeTab, fabricCreativeModeTabOutput) -> {
 			if (tab.equals(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(creativeModeTab).orElse(null))) {

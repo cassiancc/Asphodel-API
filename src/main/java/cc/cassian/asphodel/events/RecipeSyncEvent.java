@@ -10,8 +10,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 *///?}
 
-public class RecipeSyncEvent {
-	protected static void syncRecipes(String modId, Iterable<RecipeSerializer<?>> serializers, Iterable<RecipeType<?>> types) {
+public final class RecipeSyncEvent {
+	static void syncRecipes(String modId, Iterable<RecipeSerializer<?>> serializers, Iterable<RecipeType<?>> types) {
 		//? fabric && >26{
 		serializers.forEach(RecipeSynchronization::synchronizeRecipeSerializer);
 		//?} else if neoforge && >26 {
